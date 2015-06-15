@@ -1,0 +1,31 @@
+.bad div, .bad a {
+    background-color: rgba(239, 71, 58, 0.3) !important;
+}
+
+.not-good div, .not-good a {
+    background-color: rgba(255, 201, 0, 0.3) !important;
+}
+
+.good div, .good a {
+    background-color: rgba(17, 193, 243, 0.3) !important;
+}
+
+.awesome div, .awesome a{
+    background-color: rgba(51, 205, 95, 0.3) !important;
+}
+
+.bad-text {
+    color: #ef473a;
+}
+
+.not-good-text {
+    color: #ffc900;
+}
+
+.good-text {
+    color: #387ef5;
+}
+
+.awesome-text {
+    color: #33cd5f;
+}

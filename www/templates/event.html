@@ -1,0 +1,47 @@
+<ion-view view-title="Event">
+  <ion-content>
+    <div class="card">
+        <form ng-submit="updateDayEvent(event)" ng-if="event.type === 'day'">
+          <div class="item item-divider">
+            Your event for {{beautifyDate(event)}}.
+          </div>
+          <div class="item item-text-wrap">
+            <label class="item item-input">
+                <input type="text" placeholder="Event" ng-model="event.title">
+              </label>
+          </div>
+          <div class="item">
+            <label>Day score:</label>
+            <div class="range range-positive"  ng-class="{0:'bad-text', 1:'not-good-text', 2:'good-text', 3:'awesome-text'}[event.score]">
+              <i class="icon ion-thumbsdown"></i>
+              <input type="range" name="score" min="0" max="3" step="1" ng-model="event.score">
+              <i class="icon ion-thumbsup"></i>
+            </div>
+          </div>
+          <div class="item item-divider">
+            <!--<button class="button button-block button-positive" ng-class="{0:'button-assertive', 1:'button-energized', 2:'button-positive', 3:'button-balanced'}[event.score]" type="submit">-->
+              <!--Update-->
+            <!--</button>-->
+          </div>
+        </form>
+
+
+      <form ng-submit="updateNestedEvent(event)" ng-if="event.type !== 'day'">
+        <div class="item item-divider">
+          Your choise for {{beautifyDate(event)}}.
+        </div>
+        <div class="item item-text-wrap">
+          <ion-radio ng-repeat="variant in variants" ng-model="selectedEvent.id" ng-value="variant.id" ng-class="{0:'bad', 1:'not-good', 2:'good', 3:'awesome'}[variant.score]">
+            {{variant.title}}
+          </ion-radio>
+        </div>
+        <div class="item item-divider">
+          <!--<button class="button button-block button-positive" type="submit">-->
+            <!--Update-->
+          <!--</button>-->
+        </div>
+      </form>
+
+    </div>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,27 @@
+<ion-view view-title="Settings">
+    <ion-content>
+        <div class="card">
+            <div class="item item-text-wrap">Version 0.4.3</div>
+        </div>
+        <label class="item item-input item-stacked-label">
+            <span class="input-label">Notification time</span>
+            <ionic-timepicker etime="settings.notificationTime" format="settings.format" step="10">
+                <button class="button button-block button-positive" ng-disabled="!isApp">
+                    <standard-time-meridian ng-if="isApp" etime='settings.notificationTime'></standard-time-meridian>
+                    <span ng-if="!isApp">Disabled for web version</span>
+                </button>
+            </ionic-timepicker>
+        </label>
+        <label class="item item-input">
+            <span class="input-label">Start date:</span>
+            <input type="date" ng-model="settings.startDate">
+        </label>
+
+        <div class="card">
+            <div class="item item-text-wrap">Logged as: {{$root.user.facebook.displayName}}</div>
+        </div>
+
+        <button class="button button-full button-outline button-assertive" ng-click="logout()">Logout
+        </button>
+    </ion-content>
+</ion-view>
