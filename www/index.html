@@ -3,27 +3,170 @@
 <!--<html>-->
 <head>
     <meta charset="utf-8">
-    <title>MIE</title>
+    <title>Eventship</title>
 
     <!-- MOBILE WEB CONFIG -->
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-touch-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="icons/apple-touch-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="icons/apple-touch-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="icons/apple-touch-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="icons/apple-touch-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="icons/apple-touch-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="icons/apple-touch-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="icons/apple-touch-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon-180x180.png">
-    <link rel="icon" type="image/png" href="icons/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="icons/android-chrome-192x192.png" sizes="192x192">
-    <link rel="icon" type="image/png" href="icons/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/png" href="icons/favicon-16x16.png" sizes="16x16">
-    <link rel="manifest" href="icons/manifest.json">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="msapplication-TileImage" content="icons/mstile-144x144.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-title" content="Eventship">
+    <meta name="application-name" content="Eventship">
+    <meta name="msapplication-TileColor" content="#2b5797">
+    <meta name="msapplication-TileImage" content="/mstile-144x144.png">
     <meta name="theme-color" content="#ffffff">
+
+    <script>
+
+        //CHANGE TO REFLECT EXTRACTED IMAGE PATH
+        var img_path = 'splash/';
+
+        //IOS DETECTION
+        var iOS = /(iPad|iPhone|iPod)/g.test(navigator.userAgent);
+        var res = navigator.userAgent.match(/; CPU.*OS (\d_\d)/);
+        var version = res && iOS ? parseFloat(res[res.length-1].replace("_", ".")) : null;
+
+        //VERSION FORCED TO iOS 6 UNTIL BUGS ARE FIXED IN iOS 7
+        version = 6;
+
+        //DEVICE DETECTION
+        var isTablet = navigator.userAgent.match(/iPad/i) != null;
+        var isMobile = navigator.userAgent.match(/iPhone/i) != null || navigator.userAgent.match(/iPod/i) != null;
+
+        var iphone4 = (window.screen.height == (960 / 2));
+        var iphone5 = (window.screen.height == (1136 / 2));
+
+
+        function add_ios_screen(href, media) {
+            var first = document.getElementsByTagName('script')[0];
+            var el = document.createElement('link');
+            el.setAttribute('rel','apple-touch-startup-image');
+            el.setAttribute('href',img_path+href);
+            el.setAttribute('media',media);
+            first.parentNode.insertBefore(el, first);
+        }
+
+        function add_ios_icon(href, sizes) {
+//            var first = document.getElementsByTagName('script')[0];
+//            var el = document.createElement('link');
+//            el.setAttribute('rel','apple-touch-icon-precomposed');
+//            el.setAttribute('href',img_path+href);
+//            el.setAttribute('sizes',sizes);
+//            first.parentNode.insertBefore(el, first);
+        }
+
+        function add_ios_meta(name, content) {
+            var first = document.getElementsByTagName('script')[0];
+            var el = document.createElement('meta');
+            el.setAttribute('name',name);
+            el.setAttribute('content',content);
+            first.parentNode.insertBefore(el, first);
+        }
+
+
+        //DEBUG
+        //alert('iOS: '+iOS+' Version: '+version+' isTablet: '+isTablet+' isMobile: '+isMoble+' iPhone4: '+iphone4+' iPhone5: '+iphone5);
+
+        if(iOS) {
+
+            //DISPLAY LOGIC
+            if(isTablet) {
+
+                if(version>=7) {
+
+                    //iPad iOS 7 Icons
+                    add_ios_icon('icon_ipad_ios7.png', '76x76');
+                    add_ios_icon('icon_ipad_ios7_retina.png', '152x152');
+
+                    //Status Bar Area Included (iOS 7 and above)
+                    add_ios_screen('ipad_ios7_portrait.jpg', '(device-width: 768px) and (orientation: portrait)');
+                    add_ios_screen('ipad_ios7_landscape.jpg', '(device-width: 768px) and (orientation: landscape)');
+                    add_ios_screen('ipad_2x_ios7_portrait.jpg', '(device-width: 768px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)');
+                    add_ios_screen('ipad_2x_ios7_landscape.jpg', '(device-width: 768px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)');
+
+                } else {
+
+                    //iPad iOS 6 Icons
+                    add_ios_icon('icon_ipad_ios6.png', '72x72');
+                    add_ios_icon('icon_ipad_ios6_retina.png', '144x144');
+
+                    //Status Bar Area Excluded (iOS 6 and below)
+                    add_ios_screen('ipad_ios6_portrait.jpg', '(device-width: 768px) and (orientation: portrait)');
+                    add_ios_screen('ipad_ios6_landscape.jpg', '(device-width: 768px) and (orientation: landscape)');
+                    add_ios_screen('ipad_2x_ios6_portrait.jpg', '(device-width: 768px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)');
+                    add_ios_screen('ipad_2x_ios6_landscape.jpg', '(device-width: 768px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)');
+
+                }
+
+            } else if(isMobile) {
+
+                if(iphone5) {
+
+                    //iPhone 5 - Always Retina
+                    if(version>=7) {
+
+                        //iPhone 5 Icon
+                        add_ios_icon('icon_iphone_ios7_retina.png', '120x120');
+
+                        //Status Bar Area Included (iOS 7 and above)
+                        add_ios_screen('iphone5_ios7.jpg', '(device-width: 320px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)');
+
+                    } else {
+
+                        //iPhone 5 Icon
+                        add_ios_icon('icon_iphone_ios6_retina.png', '114x114');
+
+                        //Status Bar Area Excluded (iOS 6 and below)
+                        add_ios_screen('iphone5_ios6.jpg', '(device-width: 320px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)');
+
+                    }
+
+                } else {
+
+                    //iPhone 4 and Below
+                    if(version>=7) {
+
+                        //iPhone 4 iOS 7 Icon
+                        add_ios_icon('icon_iphone_ios7_retina.png', '120x120');
+
+                        //Status Bar Area Included (iOS 7 and above) - Always Retina
+                        add_ios_screen('iphone4_ios7.jpg', '(device-width: 320px) and (orientation: portrait)');
+
+                    } else {
+
+                        //iPhone iOS 6 Icons
+                        add_ios_icon('icon_iphone_ios6.png', '72x72');
+                        add_ios_icon('icon_iphone_ios6_retina.png', '144x144');
+
+                        //Status Bar Area Excluded (iOS 6 and below) - Sometimes Retina
+                        add_ios_screen('iphone3G.jpg', '(device-width: 320px) and (orientation: portrait)');
+                        add_ios_screen('iphone4_ios6.jpg', '(device-width: 320px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)');
+
+                    }
+
+                }
+            }
+        }
+    </script>
+
+
+    <!-- Configure the status bar. -->
+    <meta name="apple-mobile-web-app-status-bar-style"
+          content="black">
+    <!-- Disable automatic phone number detection. -->
+    <meta name="format-detection"
+          content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <meta name="mobile-web-app-capable" content="yes">
 
@@ -59,16 +202,7 @@
     <script src="js/controllers.js"></script>
     <script src="js/events.js"></script>
     <!--<script src="http://jsconsole.com/remote.js?1BBD8715-8BCF-4F8F-8A5E-A6699FC9B9A0"></script>-->
-    <script>
-        var _rollbarConfig = {
-            accessToken: "c437fa88147248fdb8698f4115eab525",
-            captureUncaught: true,
-            payload: {
-                environment: "production"
-            }
-        };
-        !function(a,b){function c(b){this.shimId=++h,this.notifier=null,this.parentShim=b,this.logger=function(){},a.console&&void 0===a.console.shimId&&(this.logger=a.console.log)}function d(b,c,d){a._rollbarWrappedError&&(d[4]||(d[4]=a._rollbarWrappedError),d[5]||(d[5]=a._rollbarWrappedError._rollbarContext),a._rollbarWrappedError=null),b.uncaughtError.apply(b,d),c&&c.apply(a,d)}function e(b){var d=c;return g(function(){if(this.notifier)return this.notifier[b].apply(this.notifier,arguments);var c=this,e="scope"===b;e&&(c=new d(this));var f=Array.prototype.slice.call(arguments,0),g={shim:c,method:b,args:f,ts:new Date};return a._rollbarShimQueue.push(g),e?c:void 0})}function f(a,b){if(b.hasOwnProperty&&b.hasOwnProperty("addEventListener")){var c=b.addEventListener;b.addEventListener=function(b,d,e){c.call(this,b,a.wrap(d),e)};var d=b.removeEventListener;b.removeEventListener=function(a,b,c){d.call(this,a,b&&b._wrapped?b._wrapped:b,c)}}}function g(a,b){return b=b||this.logger,function(){try{return a.apply(this,arguments)}catch(c){b("Rollbar internal error:",c)}}}var h=0;c.init=function(a,b){var e=b.globalAlias||"Rollbar";if("object"==typeof a[e])return a[e];a._rollbarShimQueue=[],a._rollbarWrappedError=null,b=b||{};var h=new c;return g(function(){if(h.configure(b),b.captureUncaught){var c=a.onerror;a.onerror=function(){var a=Array.prototype.slice.call(arguments,0);d(h,c,a)};var g,i,j="EventTarget,Window,Node,ApplicationCache,AudioTrackList,ChannelMergerNode,CryptoOperation,EventSource,FileReader,HTMLUnknownElement,IDBDatabase,IDBRequest,IDBTransaction,KeyOperation,MediaController,MessagePort,ModalWindow,Notification,SVGElementInstance,Screen,TextTrack,TextTrackCue,TextTrackList,WebSocket,WebSocketWorker,Worker,XMLHttpRequest,XMLHttpRequestEventTarget,XMLHttpRequestUpload".split(",");for(g=0;g<j.length;++g)i=j[g],a[i]&&a[i].prototype&&f(h,a[i].prototype)}return a[e]=h,h},h.logger)()},c.prototype.loadFull=function(a,b,c,d,e){var f=g(function(){var a=b.createElement("script"),e=b.getElementsByTagName("script")[0];a.src=d.rollbarJsUrl,a.async=!c,a.onload=h,e.parentNode.insertBefore(a,e)},this.logger),h=g(function(){var b;if(void 0===a._rollbarPayloadQueue){var c,d,f,g;for(b=new Error("rollbar.js did not load");c=a._rollbarShimQueue.shift();)for(f=c.args,g=0;g<f.length;++g)if(d=f[g],"function"==typeof d){d(b);break}}"function"==typeof e&&e(b)},this.logger);g(function(){c?f():a.addEventListener?a.addEventListener("load",f,!1):a.attachEvent("onload",f)},this.logger)()},c.prototype.wrap=function(b,c){try{var d;if(d="function"==typeof c?c:function(){return c||{}},"function"!=typeof b)return b;if(b._isWrap)return b;if(!b._wrapped){b._wrapped=function(){try{return b.apply(this,arguments)}catch(c){throw c._rollbarContext=d()||{},c._rollbarContext._wrappedSource=b.toString(),a._rollbarWrappedError=c,c}},b._wrapped._isWrap=!0;for(var e in b)b.hasOwnProperty(e)&&(b._wrapped[e]=b[e])}return b._wrapped}catch(f){return b}};for(var i="log,debug,info,warn,warning,error,critical,global,configure,scope,uncaughtError".split(","),j=0;j<i.length;++j)c.prototype[i[j]]=e(i[j]);var k="//d37gvrvc0wt4s1.cloudfront.net/js/v1.2/rollbar.min.js";_rollbarConfig.rollbarJsUrl=_rollbarConfig.rollbarJsUrl||k;var l=c.init(a,_rollbarConfig);l.loadFull(a,b,!1,_rollbarConfig)}(window,document);
-    </script>
+    <script src="js/rollbar.js"></script>
 
 </head>
 

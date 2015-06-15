@@ -169,10 +169,12 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
 })
 
 
-.factory('Events', ['utils', 'settings', 'store', 'DayEvent', 'NestedEvent',
+.factory('Events', ['utils', 'settings', 'store', 'DayEvent', 'NestedEvent', 'isOnline',
 
-    function (utils, settings, store, DayEvent, NestedEvent) {
-
+    function (utils, settings, store, DayEvent, NestedEvent, isOnline) {
+        isOnline().then((status) => {
+            console.log('isOnline', status);
+        });
         let startFrom = new Date();
         //let lastEventDate = new Date(startFrom);
         //lastEventDate.setDate(startFrom.getDate() - 1);

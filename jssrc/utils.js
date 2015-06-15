@@ -70,4 +70,46 @@ angular.module('mie.utils', [])
             }
         };
         return Utils;
-    });
+    })
+
+    .factory('isOnline', () => {
+        let domains = [
+            'www.google.com',
+            'www.cloudflare.com',
+            'www.baidu.com',
+            'www.yandex.ru'
+        ];
+
+        function testUrl(url) {
+            return new Promise((resolve, reject) => {
+                try {
+                    let img = new Image();
+
+                    img.onload = function () {
+                        resolve(true);
+                    };
+
+                    img.onerror = function () {
+                        resolve(false);
+                    };
+
+                    img.src = url;
+                } catch (ex) {
+                    reject(ex);
+                }
+            });
+
+        }
+
+        function isOnline() {
+            return Promise.all(domains.map((domain) => {
+                return testUrl('//' + domain + '/favicon.ico?' + Date.now());
+            })).then((results) => {
+                return results.reduce((pr, cr) => {
+                    return pr && cr;
+                });
+            });
+        }
+
+        return isOnline;
+    })

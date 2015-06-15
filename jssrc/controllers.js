@@ -90,7 +90,6 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
                 if (!$scope.submitDone && $scope.unsubmitType !== 'day' && $scope.unsubmitVariants.length === 1) {
                     Events.submitNestedEvent($scope.event.type, $scope.unsubmitVariants[0].id);
                 }
-                console.log('type', $scope.unsubmitType);
             }
             update();
 
@@ -141,7 +140,6 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
         }
         if (type !== 'day') {
             $scope.variants = Events.getNestedEventVariants(type, id);
-            console.log($scope.variants);
             $scope.selectedEvent = {
                 id: $scope.event.selectedChildId
             };
@@ -156,7 +154,6 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
                 return;
             }
             Events.updateNestedEvent(type, $scope.event.id, selectedDayId);
-            console.log('update', selectedDayId);
         });
 
         //throw new Error('Test Error');

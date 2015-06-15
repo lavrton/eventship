@@ -6,6 +6,9 @@ angular.module('mie.store', [])
 
 
         return {
+            onUpdate: () => {
+
+            },
             save: (event) => {
                 console.log('save', event);
                 let userRef = ref.child("users").child($rootScope.user.uid);

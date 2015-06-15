@@ -6,6 +6,13 @@ ionic.app.css
 ionic.app.min.css
 style.css
 ionic.png
+app.js
+controllers.js
+events.js
+rollbar.js
+settings.js
+store.js
+utils.js
 android-chrome-144x144.png
 android-chrome-192x192.png
 android-chrome-36x36.png
@@ -28,20 +35,14 @@ favicon-16x16.png
 favicon-32x32.png
 favicon-96x96.png
 favicon.ico
+firebase.json
+index.html
 manifest.json
 mstile-144x144.png
 mstile-150x150.png
 mstile-310x150.png
 mstile-310x310.png
 mstile-70x70.png
-app.js
-controllers.js
-events.js
-settings.js
-store.js
-utils.js
-firebase.json
-index.html
 event.html
 events.html
 login.html
@@ -64,4 +65,4 @@ https://*
 SETTINGS:
 prefer-online
 
-# hash: 49f837916859733374c7fabac10c266b3346b6710445f5424fb5d731b4fea97e
+# hash: 2817e0681180a3d0e6fbbb09a7742af548165a6def484f1598cdf2b5b1c53077
