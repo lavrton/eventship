@@ -1,3 +1,6 @@
+/*eslint no-var: 0, max-statements: 0 , max-nested-callbacks: 0*/
+/* global inject */
+
 angular.module('mie.settings', [])
     .factory('settings', function () {
         var Settings = {
@@ -25,8 +28,9 @@ angular.module('mie.store', [])
                         });
                     });
                 },
+                onUpdate: function () {},
                 setting: function () {
-                    return new Promise(function (resolve, reject) {
+                    return new Promise(function (resolve) {
                         resolve('');
                     });
                 }
@@ -35,22 +39,19 @@ angular.module('mie.store', [])
     ]);
 
 describe('Events', function () {
-    var Events, startDate, settings;
+    var Events;
 
     beforeEach(module('mie.events'));
     beforeEach(module('mie.store'));
 
     beforeEach(inject(function ($injector) {
-        settings = $injector.get('settings');
-        //settings.startDate(startDate);
+        // $injector.get('settings');
         Events = $injector.get('Events');
     }));
 
     beforeEach(function (done) {
         Events.load(done);
     });
-
-
 
 
     it('can change start date', function () {
@@ -202,22 +203,12 @@ describe('Events', function () {
         });
 
         it('checking length', function () {
-            expect(list.length).toBe(13);
+            expect(list.length).toBe(2);
         });
 
         it('first we have last week', function () {
             expect(list[0].type).toBe('week');
             expect(list[0].id).toBe('2015-01-05');
-        });
-
-        it('after week we have children 7 days', function () {
-            expect(list[1].type).toBe('day');
-            expect(list[1].id).toBe('2015-01-11');
-            expect(list[1].title).toBe('вс');
-
-            expect(list[7].type).toBe('day');
-            expect(list[7].id).toBe('2015-01-05');
-            expect(list[7].title).toBe('пн');
         });
     });
 
@@ -237,7 +228,7 @@ describe('Events', function () {
         });
 
         it('checking length', function () {
-            expect(list.length).toBe(5);
+            expect(list.length).toBe(2);
         });
 
         it('first should be day', function () {

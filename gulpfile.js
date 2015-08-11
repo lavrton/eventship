@@ -8,6 +8,10 @@ var sh = require('shelljs');
 var babel = require('gulp-babel');
 var sourcemaps = require('gulp-sourcemaps');
 var manifest = require('gulp-manifest');
+var gulpCopy = require('gulp-copy');
+var shell = require('gulp-shell');
+var replace = require('gulp-replace');
+var rimraf = require('rimraf');
 
 var paths = {
     sass: ['./scss/**/*.scss'],
@@ -59,22 +63,66 @@ gulp.task('install', ['git-check'], function () {
         });
 });
 
-gulp.task('manifest', function () {
-    gulp.src(['www/css/*', 'www/img/*', 'www/icons/*', 'www/js/*', 'www/*', 'www/templates/*',
-        'wwww/lib/ionic/js/ionic.bundle.js',
-        'www/lib/ionic-timepicker/dist/*',
-        'www/lib/moment/min/moment.min.js',
-        'www/lib/lodash/lodash.min.js',
-        'www/lib/firebase/firebase.js'
-    ])
+
+var wwwFiles = ['www/css/*', 'www/img/*', 'www/icons/*', 'www/js/*', 'www/*', 'www/templates/*',
+
+    'www/lib/ionic/js/ionic.bundle.min.js',
+    'www/lib/ionic/fonts/ionicons.woff',
+    'www/lib/ionic/fonts/ionicons.ttf',
+
+    'www/lib/ionic-timepicker/dist/style.css',
+    'www/lib/ionic-timepicker/dist/templates.js',
+    'www/lib/ionic-timepicker/dist/ionic-timepicker.js',
+
+
+    'www/lib/moment/min/moment.min.js',
+    'www/lib/lodash/lodash.min.js',
+    'www/lib/firebase/firebase.js'
+];
+
+var www_build = 'www_build';
+
+gulp.task('clean_build', function (cb) {
+    rimraf(www_build + '/', cb);
+});
+
+gulp.task('copy_www', ['clean_build'], function () {
+    return gulp.src(wwwFiles.concat('firebase.json'))
+        .pipe(gulpCopy(www_build, {
+            prefix: 1
+        }));
+});
+
+gulp.task('deploy_firebase', ['copy_www', 'manifest', 'replace_index_manifest'], shell.task([
+    'firebase deploy'
+], {
+    cwd: './' + www_build
+}));
+
+gulp.task('deploy', ['deploy_firebase']);
+
+gulp.task('manifest', ['copy_www'], function () {
+    return gulp.src(www_build + '/**/*')
         .pipe(manifest({
             hash: true,
             preferOnline: true,
             network: ['http://*', 'https://*', '*'],
             filename: 'app.manifest',
-            exclude: 'app.manifest'
+            exclude: ['app.manifest', 'firebase.json']
         }))
-        .pipe(gulp.dest('www'));
+        .pipe(gulp.dest(www_build));
+});
+
+gulp.task('replace_index_manifest', ['copy_www'], function (cb) {
+    var input = './' + 'www' + '/index.html';
+    var output = '' + www_build + '/index.html'
+
+    rimraf(output, function () {
+        gulp.src(input)
+            .pipe(replace('<html>', '<html manifest="app.manifest">'))
+            .pipe(gulp.dest(www_build))
+            .on('end', cb);
+    });
 });
 
 gulp.task('git-check', function (done) {

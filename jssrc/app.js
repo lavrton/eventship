@@ -1,4 +1,4 @@
-// Ionic Starter App
+// EventShip Starter App
 
 
 // angular.module is a global place for creating, registering
@@ -70,49 +70,24 @@ angular.module('mie', ['ionic', 'mie.controllers', 'ionic-timepicker'])
                 $delegate(exception, cause);
             };
         }]);
-    })
-    .directive('standardTimeMeridian', function () {
-        return {
-            restrict: 'AE',
-            replace: true,
-            scope: {
-                etime: '=etime'
-            },
-            template: '<strong>{{stime}}</strong>',
-            link: function (scope) {
-
-                function epochParser(val, opType) {
-                    if (val === null) {
-                        return '00:00';
-                    } else {
-                        let meridian = ['AM', 'PM'];
-
-                        if (opType === 'time') {
-                            let hours = parseInt(val / 3600);
-                            let minutes = (val / 60) % 60;
-                            let hoursRes = hours > 12 ? (hours - 12) : hours;
-
-                            let currentMeridian = meridian[parseInt(hours / 12)];
-
-                            return (prependZero(hoursRes) + ':' + prependZero(minutes) + ' ' + currentMeridian);
-                        }
-                    }
-                }
-
-                scope.stime = epochParser(scope.etime, 'time');
-
-                function prependZero(param) {
-                    if (String(param).length < 2) {
-                        return '0' + String(param);
-                    }
-                    return param;
-                }
-
-
-                scope.$watch('etime', function () {
-                    scope.stime = epochParser(scope.etime, 'time');
-                });
-
-            }
-        };
     });
+
+function onUpdateReady() {
+    if (confirm('New version is ready. Update?')) {
+        window.location.reload();
+    }
+}
+
+
+function checkUpdates() {
+    let cache = window.applicationCache;
+    if (!cache) {
+        return;
+    }
+    if (cache.status === cache.UPDATEREADY) {
+        onUpdateReady();
+    }
+    cache.addEventListener('updateready', onUpdateReady);
+}
+
+checkUpdates();

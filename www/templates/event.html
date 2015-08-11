@@ -1,6 +1,5 @@
 <ion-view view-title="Event">
   <ion-content>
-    <div class="card">
         <form ng-submit="updateDayEvent(event)" ng-if="event.type === 'day'">
           <div class="item item-divider">
             Your event for {{beautifyDate(event)}}.
@@ -42,6 +41,15 @@
         </div>
       </form>
 
-    </div>
+
+    <ion-list>
+      <div class="item item-divider">
+        Nested Events:
+      </div>
+
+      <ion-item ng-repeat="evt in event.children track by evt.id + evt.type" href="#/app/events/{{evt.type}}/{{evt.id}}" ng-value="evt.id" ng-class="{0:'bad', 1:'not-good', 2:'good', 3:'awesome'}[evt.score]">
+        {{evt.title}}<span class="item-note">{{beautifyDate(evt)}}</span>
+      </ion-item>
+    </ion-list>
   </ion-content>
 </ion-view>

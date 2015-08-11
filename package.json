@@ -14,8 +14,14 @@
     "eslint": "^0.22.1",
     "eslint-plugin-smells": "^1.0.1",
     "eslint-plugin-spellcheck": "0.0.4",
+    "gulp-appcache": "0.0.4",
     "gulp-babel": "^5.1.0",
+    "gulp-cache-manifest": "0.0.1",
+    "gulp-copy": "0.0.2",
+    "gulp-html-replace": "^1.5.0",
     "gulp-manifest": "0.0.6",
+    "gulp-replace": "^0.5.3",
+    "gulp-shell": "^0.4.2",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-util": "^2.2.14",
     "jasmine-core": "^2.3.4",
@@ -24,6 +30,7 @@
     "karma-jasmine": "^0.3.5",
     "karma-phantomjs-launcher": "^0.2.0",
     "phantomjs": "^1.9.17",
+    "rimraf": "^2.4.0",
     "shelljs": "^0.3.0"
   },
   "cordovaPlugins": [
@@ -36,6 +43,5 @@
   "cordovaPlatforms": [
     "ios"
   ],
-  "scripts": {
-  }
+  "scripts": {}
 }

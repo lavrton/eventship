@@ -78,6 +78,7 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
         this.score = (data.score !== undefined) ? parseInt(data.score) : 2;
         this.id = data.id;
         this.date = new Date(data.date);
+        this.updated = data.updated || Date.now();
     }
 
     DayEvent.prototype.toObject = function () {
@@ -86,7 +87,8 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
             title: this.title,
             id: this.id,
             score: this.score,
-            date: this.date.toString()
+            date: this.date.toString(),
+            updated: this.updated
         };
     };
 
@@ -107,11 +109,12 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
         return days;
     }
 
-    function NestedEvent(type, id) {
-        this.type = type;
-        this.id = id;
+    function NestedEvent(data) {
+        this.type = data.type;
+        this.id = data.id;
         this.children = [];
-        this.selectedChildId = null;
+        this.selectedChildId = data.selectedChildId || null;
+        this.updated = data.updated || Date.now();
     }
 
     Object.defineProperty(NestedEvent.prototype, 'title', {
@@ -136,11 +139,17 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
     });
 
     NestedEvent.prototype.toObject = function () {
-        return {
+        let obj = {
             type: this.type,
             id: this.id,
-            selectedChildId: this.selectedChildId || ''
+            updated: this.updated
         };
+
+        if (this.selectedChildId) {
+            obj.selectedChildId = this.selectedChildId;
+        }
+
+        return obj;
     };
 
     NestedEvent.prototype.addChild = function (child) {
@@ -222,22 +231,27 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
             allNestedEvents: function () {
                 return nestedEvents;
             },
+            _updateFromData: (data) => {
+                nestedEvents = data.nestedEvents.map((event) => {
+                    let e = new NestedEvent(event);
+                    return e;
+                });
+                dayEvents = data.dayEvents.map((event) => {
+                    return new DayEvent(event);
+                });
+                Events._buildTree();
+                Events._triggerUpdate();
+            },
             load: (cb) => {
                 store.load((data) => {
                     settings.startDate().then((date) => {
                         startFrom = new Date(date);
-                        Events._buildTree();
+                        Events._updateFromData(data);
                         cb();
                     });
-                    nestedEvents = data.nestedEvents.map((item) => {
-                        let e = new NestedEvent(item.type, item.id);
-                        e.selectedChildId = item.selectedChildId;
-                        return e;
-                    });
-                    dayEvents = data.dayEvents.map((event) => {
-                        return new DayEvent(event);
-                    });
-
+                });
+                store.onUpdate((data) => {
+                    Events._updateFromData(data);
                 });
             },
             _buildTree: function () {
@@ -266,7 +280,7 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
                     let yearId = utils.findYearId(date);
                     let year = Events.getNested('year', yearId);
                     if (!year) {
-                        year = new NestedEvent('year', yearId);
+                        year = new NestedEvent({ type: 'year', id: yearId});
                         nestedEvents.push(year);
                         store.save(year);
                     }
@@ -274,7 +288,7 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
                     let quarterId = utils.findQuarterId(date);
                     let quarter = Events.getNested('quarter', quarterId);
                     if (!quarter) {
-                        quarter = new NestedEvent('quarter', quarterId);
+                        quarter = new NestedEvent({type: 'quarter', id: quarterId});
                         nestedEvents.push(quarter);
                         store.save(quarter);
                     }
@@ -284,7 +298,7 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
                     let monthId = utils.findMonthId(date);
                     let month = Events.getNested('month', monthId);
                     if (!month) {
-                        month = new NestedEvent('month', monthId);
+                        month = new NestedEvent({type: 'month', id: monthId});
                         nestedEvents.push(month);
                         store.save(month);
                     }
@@ -293,7 +307,7 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
                     let weekId = utils.findWeekId(date);
                     let week = Events.getNested('week', weekId);
                     if (!week) {
-                        week = new NestedEvent('week', weekId);
+                        week = new NestedEvent({type: 'week', id: weekId});
                         nestedEvents.push(week);
                         store.save(week);
                     }
@@ -316,6 +330,10 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
 
                 function addNested(e) {
 
+                    if (e.selectedChildId) {
+                        list.unshift(e);
+                        return;
+                    }
                     if (e.type === 'week') {
                         e.children.forEach(function (day) {
                             if (day.title) {
@@ -328,9 +346,6 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
                             addNested(child);
                         });
 
-                    }
-                    if (e.selectedChildId) {
-                        list.unshift(e);
                     }
                 }
 
@@ -403,18 +418,6 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
                         store.save(e);
                     });
                 }
-
-                Events._saveNested();
-            },
-            _saveNested: function () {
-                let toSave = nestedEvents.map(function (e) {
-                    return {
-                        id: e.id,
-                        type: e.type,
-                        selectedChildId: e.selectedChildId
-                    };
-                });
-                localStorage.setItem('nestedEvents', JSON.stringify(toSave));
             },
             submitDayEvent: function (title, score) {
                 let day = Events._getUnsubmitDay();
@@ -490,6 +493,9 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
             _updateFunctions: [],
             onUpdate: (cb) => {
                 Events._updateFunctions.push(cb);
+            },
+            _triggerUpdate: () => {
+                Events._updateFunctions.forEach((func) => func());
             }
         };
 

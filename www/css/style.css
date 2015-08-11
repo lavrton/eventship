@@ -7,11 +7,11 @@
 }
 
 .good div, .good a {
-    background-color: rgba(17, 193, 243, 0.3) !important;
+    background-color: rgba(151, 245, 93, 0.3) !important;
 }
 
 .awesome div, .awesome a{
-    background-color: rgba(51, 205, 95, 0.3) !important;
+    background-color: rgba(2, 165, 0, 0.3) !important;
 }
 
 .bad-text {
@@ -23,9 +23,65 @@
 }
 
 .good-text {
-    color: #387ef5;
+    color: #97f55d;
 }
 
 .awesome-text {
-    color: #33cd5f;
+    color: #02a500;
+}
+
+.range.range-bad input::-webkit-slider-thumb:before {
+    background: #ef473a;
+}
+.range.range-bad input::-ms-fill-lower {
+    background: #ef473a;
+}
+
+.range.range-not-good input::-webkit-slider-thumb:before {
+    background: #ffc900;
+}
+.range.range-not-good input::-ms-fill-lower {
+    background: #ffc900;
+}
+
+.range.range-good input::-webkit-slider-thumb:before {
+    background: #97f55d;
+}
+.range.range-good input::-ms-fill-lower {
+    background: #97f55d;
+}
+
+.range.range-awesome input::-webkit-slider-thumb:before {
+    background: #02a500;
+}
+.range.range-awesome input::-ms-fill-lower {
+    background: #02a500;
+}
+
+.button.button-bad {
+    border-color: #c63b32;
+    background-color: #ef473a;
+    color: #fff;
+}
+
+.button.button-not-good {
+    border-color: #c79b00;
+    background-color: #ffc900;
+    color: #fff;
+}
+
+.button.button-good {
+    border-color: #74bb46;
+    background-color: #97f55d;
+    color: #fff;
+}
+
+.button.button-awesome {
+    border-color: #027000;
+    background-color: #02a500;
+    color: #fff;
+}
+
+label {
+    line-height: 0.7;
 }

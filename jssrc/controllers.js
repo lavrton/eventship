@@ -1,8 +1,10 @@
-/* @flow */
+// FIRST APP OPENING CONTROLLER
+// LOGIN CHECK
+// SOME NEW EXTRA TIPS AND TOUR
 
 angular.module('mie.controllers', ['mie.events', 'mie.settings'])
-    .controller('AppCtrl', ['$scope', '$location', '$ionicModal', '$rootScope',
-        function ($scope, $location, $ionicModal, $rootScope) {
+    .controller('AppCtrl', ['$scope', '$location', '$ionicModal', '$rootScope', '$ionicSlideBoxDelegate',
+        function ($scope, $location, $ionicModal, $rootScope, $ionicSlideBoxDelegate) {
             // Create the login modal that we will use later
             let ref = new Firebase('https://incandescent-fire-1476.firebaseio.com/');
             $rootScope.user = $scope.user = ref.getAuth();
@@ -18,9 +20,13 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
                 }
             });
 
+
+
             // Triggered in the login modal to close it
             $scope.closeLogin = function () {
-                $scope.modal.hide();
+                if ($scope.modal) {
+                    $scope.modal.hide();
+                }
             };
 
             // Open the login modal
@@ -37,6 +43,7 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
 
                         console.log('Authenticated successfully with payload:', authData);
                         $rootScope.user = $scope.user = authData;
+                        localStorage.setItem('logged', 'true');
                         $location.path('/events');
                     }
                 });
@@ -48,31 +55,55 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
 
             ref.onAuth(function (authData) {
                 //$scope.closeLogin();
-                if (authData && $scope.modal) {
+                if (authData) {
                     $scope.closeLogin();
                     $rootScope.user = $scope.user = authData;
+                    localStorage.setItem('logged', 'true');
                     $location.path('/events');
                 }
 
             });
+
+
+            $ionicModal.fromTemplateUrl('templates/tour.html', {
+                scope: $scope
+            }).then(function (tour) {
+                $scope.tour = tour;
+                //tour.show();
+            });
+
+            // Triggered in the login modal to close it
+            $scope.closeTour = function () {
+                if ($scope.tour) {
+                    $scope.tour.hide();
+                }
+            };
         }
     ])
+
+
+    // MAIN PAGE WITH SUBMIT FORM AND LIST
     .controller('EventsCtrl', ['$scope', 'Events', 'beautifyDate', '$ionicLoading', '$rootScope',
         function ($scope, Events, beautifyDate, $ionicLoading, $rootScope) {
 
             function start() {
-                if (!$rootScope.user) {
+                let isLogged = localStorage.getItem('logged');
+                if (isLogged) {
+                    $scope.loadingIndicator = $ionicLoading.show({
+                        scope: $scope
+                    });
+                }
+                if (!isLogged) {
                     return;
                 }
-                $scope.loadingIndicator = $ionicLoading.show({
-                    scope: $scope
-                });
+
                 Events.load(() => {
                     update();
                     $ionicLoading.hide();
                     $scope.$apply();
                 });
             }
+
             start();
 
 
@@ -113,6 +144,16 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
                 update();
             };
 
+            $scope.onScoreChange = function(event) {
+                var placeholders = [
+                    'Bad :(? ANYTHING interesting here?',
+                    'Not really good? So type your event...',
+                    'Good day! What you was doing?',
+                    'AWESOME?! What you did or made?'
+                ];
+                event.placeholder = placeholders[event.score];
+            };
+
 
             $scope.createNestedEvent = function () {
                 let selectedDayId = $scope.selectedEvent.id;
@@ -126,7 +167,9 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
         }
     ])
 
-.controller('EventCtrl', ['$scope', '$stateParams', '$location', 'Events', 'beautifyDate',
+
+    // EDIT EVENT
+    .controller('EventCtrl', ['$scope', '$stateParams', '$location', 'Events', 'beautifyDate',
     function ($scope, $stateParams, $location, Events, beautifyDate) {
         $scope.beautifyDate = beautifyDate;
 

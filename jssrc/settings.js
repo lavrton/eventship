@@ -4,7 +4,7 @@ angular.module('mie.settings', ['mie.store'])
             notificationTime: (time) => {
                 if (time) { // setter
                     store.setting('notificationTime', time);
-                } else {  // getter
+                } else { // getter
                     return store.setting('notificationTime').then((t) => {
                         if (!t || !parseInt(t)) {
                             t = 75600;
@@ -31,42 +31,44 @@ angular.module('mie.settings', ['mie.store'])
         };
         return Settings;
     }])
-    .controller('SettingsCtrl', ['$scope', 'settings', 'Events', function ($scope, settings, Events) {
-        $scope.settings = {
-            notificationTime: 0,
-            startDate: new Date(),
-            format: 12
-        };
+    .controller('SettingsCtrl', ['$scope', 'settings', 'Events',
+        function ($scope, settings, Events) {
+            $scope.settings = {
+                notificationTime: 0,
+                startDate: new Date(),
+                format: 12
+            };
 
-        settings.notificationTime().then((time) => {
-            $scope.settings.notificationTime = time;
-            $scope.$apply();
-        });
+            settings.notificationTime().then((time) => {
+                $scope.settings.notificationTime = time;
+                $scope.$apply();
+            });
 
-        settings.startDate().then((date) => {
-            console.log('from server', date);
-            $scope.settings.startDate = date;
-            $scope.$apply();
-        });
+            settings.startDate().then((date) => {
+                $scope.settings.startDate = date;
+                $scope.$apply();
+            });
 
-        $scope.isApp = !!window.cordova;
+            $scope.isApp = !!window.cordova;
 
 
-        $scope.$watch('settings.notificationTime', function (newValue) {
-            settings.notificationTime(newValue);
-        });
+            $scope.$watch('settings.notificationTime', function (newValue) {
+                settings.notificationTime(newValue);
+            });
 
-        $scope.$watch('settings.startDate', function (newValue) {
-            if (newValue.toDateString() === new Date().toDateString()) {
-                return;
-            }
-            settings.startDate(newValue);
-            Events._setStartDate(newValue);
-        });
+            $scope.$watch('settings.startDate', function (newValue) {
+                if (newValue.toDateString() === new Date().toDateString()) {
+                    return;
+                }
+                settings.startDate(newValue);
+                Events._setStartDate(newValue);
+            });
 
-        $scope.logout = () => {
-            var ref = new Firebase("https://incandescent-fire-1476.firebaseio.com/");
-            ref.unauth();
-            location.reload();
-        };
-    }]);
+            $scope.logout = () => {
+                let ref = new Firebase('https://incandescent-fire-1476.firebaseio.com/');
+                ref.unauth();
+                localStorage.clearItem('logged');
+                location.reload();
+            };
+        }
+    ]);
