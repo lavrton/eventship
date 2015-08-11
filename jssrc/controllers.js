@@ -145,7 +145,7 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
             };
 
             $scope.onScoreChange = function(event) {
-                var placeholders = [
+                let placeholders = [
                     'Bad :(? ANYTHING interesting here?',
                     'Not really good? So type your event...',
                     'Good day! What you was doing?',
