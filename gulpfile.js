@@ -104,7 +104,7 @@ gulp.task('deploy_github', ['build'], shell.task([
     'git commit -m "update ' + new Date() + '"',
     'git push'
 ]), {
-    cwd: './' + app_build
+    cwd: './site'
 });
 
 gulp.task('build', ['copy_www', 'manifest', 'replace_index_manifest']);
