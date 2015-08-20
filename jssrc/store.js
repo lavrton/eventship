@@ -18,6 +18,9 @@ angular.module('mie.store', []).service('store', ['$rootScope', ($rootScope) => 
 
     // PUBLIC METHODS
     Store.prototype.onUpdate = function (func) {
+        if (!$rootScope.user) {
+            return;
+        }
         let userRef = ref.child('users').child($rootScope.user.uid);
         let eventsRef = userRef.child('events');
 
@@ -68,6 +71,11 @@ angular.module('mie.store', []).service('store', ['$rootScope', ($rootScope) => 
     };
 
     Store.prototype.setting = function (key, value) {
+        if (!$rootScope.user) {
+            return new Promise((resolve) => {
+                resolve(localStorage.getItem(key));
+            });
+        }
         let userRef = ref.child('users').child($rootScope.user.uid);
         if (typeof value !== 'undefined') { // setter
             userRef.child('settings').child(key).set(value);
@@ -93,6 +101,10 @@ angular.module('mie.store', []).service('store', ['$rootScope', ($rootScope) => 
     // PRIVATE METHODS
 
     Store.prototype._getRemoteEvents = function(cb) {
+        if (!$rootScope.user) {
+            cb([]);
+            return;
+        }
         let userRef = ref.child('users').child($rootScope.user.uid);
         let eventsRef = userRef.child('events');
 
@@ -127,7 +139,7 @@ angular.module('mie.store', []).service('store', ['$rootScope', ($rootScope) => 
                 if (!remote || !remote.updated || (remote.updated < local.updated)) {
                     this._saveEventToRemote(local);
                 }
-                if (remote.updated && local.updated < remote.updated) {
+                if (remote && remote.updated && local.updated < remote.updated) {
                     this._saveEventToLocal(remote);
                     updated = true;
                 }
@@ -199,6 +211,9 @@ angular.module('mie.store', []).service('store', ['$rootScope', ($rootScope) => 
     }, 50);
 
     Store.prototype._saveEventToRemote = function (event) {
+        if (!$rootScope.user) {
+            return;
+        }
         this._justSaved = true;
         let userRef = ref.child('users').child($rootScope.user.uid);
         let eventsRef = userRef.child('events');

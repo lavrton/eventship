@@ -80,29 +80,39 @@ var wwwFiles = ['www/css/*', 'www/img/*', 'www/icons/*', 'www/js/*', 'www/*', 'w
     'www/lib/firebase/firebase.js'
 ];
 
-var www_build = 'www_build';
+var app_build = 'site/app';
 
 gulp.task('clean_build', function (cb) {
-    rimraf(www_build + '/', cb);
+    rimraf(app_build + '/', cb);
 });
 
-gulp.task('copy_www', ['clean_build'], function () {
-    return gulp.src(wwwFiles.concat('firebase.json'))
-        .pipe(gulpCopy(www_build, {
+gulp.task('copy_www', ['babel','sass','clean_build'], function () {
+    return gulp.src(wwwFiles)
+        .pipe(gulpCopy(app_build, {
             prefix: 1
         }));
 });
 
-gulp.task('deploy_firebase', ['copy_www', 'manifest', 'replace_index_manifest'], shell.task([
+gulp.task('deploy_firebase', ['sass', 'babel','copy_www', 'manifest', 'replace_index_manifest'], shell.task([
     'firebase deploy'
 ], {
-    cwd: './' + www_build
+    cwd: './' + app_build
 }));
+
+gulp.task('deploy_github', ['build'], shell.task([
+    'git add . --all',
+    'git commit -m "update ' + new Date() + '"',
+    'git push'
+]), {
+    cwd: './' + app_build
+});
+
+gulp.task('build', ['copy_www', 'manifest', 'replace_index_manifest']);
 
 gulp.task('deploy', ['deploy_firebase']);
 
 gulp.task('manifest', ['copy_www'], function () {
-    return gulp.src(www_build + '/**/*')
+    return gulp.src(app_build + '/**/*')
         .pipe(manifest({
             hash: true,
             preferOnline: true,
@@ -110,17 +120,17 @@ gulp.task('manifest', ['copy_www'], function () {
             filename: 'app.manifest',
             exclude: ['app.manifest', 'firebase.json']
         }))
-        .pipe(gulp.dest(www_build));
+        .pipe(gulp.dest(app_build));
 });
 
 gulp.task('replace_index_manifest', ['copy_www'], function (cb) {
     var input = './' + 'www' + '/index.html';
-    var output = '' + www_build + '/index.html'
+    var output = '' + app_build + '/index.html';
 
     rimraf(output, function () {
         gulp.src(input)
             .pipe(replace('<html>', '<html manifest="app.manifest">'))
-            .pipe(gulp.dest(www_build))
+            .pipe(gulp.dest(app_build))
             .on('end', cb);
     });
 });
