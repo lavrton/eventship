@@ -207,7 +207,7 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
         }
 
         $scope.$watch('selectedEvent.id', () => {
-            let selectedDayId = $scope.selectedEvent.id;
+            let selectedDayId = $scope.selectedEvent && $scope.selectedEvent.id;
             if (!selectedDayId) {
                 return;
             }

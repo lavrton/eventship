@@ -1,5 +1,5 @@
 {
   "name": "Eventship",
   "app_id": "8f52374a",
-  "gulpStartupTasks": ["sass", "babel", "watch"]
+  "gulpStartupTasks": ["babel", "watch"]
 }
