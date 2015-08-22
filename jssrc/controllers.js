@@ -6,7 +6,7 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
     .controller('AppCtrl', ['$scope', '$location', '$ionicModal', '$rootScope', '$ionicSlideBoxDelegate',
         function ($scope, $location, $ionicModal, $rootScope, $ionicSlideBoxDelegate) {
             // Create the login modal that we will use later
-            let ref = new Firebase('https://incandescent-fire-1476.firebaseio.com/');
+            let ref = new Firebase('https://incandescent-fire-1476.firebaseio.com/app');
             $rootScope.user = $scope.user = ref.getAuth();
 
             $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -27,6 +27,7 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
                 if ($scope.modal) {
                     $scope.modal.hide();
                 }
+                $rootScope.guest = true;
             };
 
             // Open the login modal
@@ -34,20 +35,36 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
                 $scope.modal.show();
             };
 
-
+            function onAuth(authData) {
+                if (!authData) {
+                    throw "Empty auth data";
+                }
+                $rootScope.user = $scope.user = authData;
+                localStorage.setItem('logged', 'true');
+                $location.path('/events');
+            }
             function redir(provider) {
-                ref.authWithOAuthRedirect(provider, function (error, authData) {
+                ref.authWithOAuthPopup(provider, function(error, authData) {
                     if (error) {
-                        console.log('Login Failed!', error);
-                    } else {
-
-                        console.log('Authenticated successfully with payload:', authData);
-                        $rootScope.user = $scope.user = authData;
-                        localStorage.setItem('logged', 'true');
-                        $location.path('/events');
+                        if (error.code === "TRANSPORT_UNAVAILABLE") {
+                            // fall-back to browser redirects, and pick up the session
+                            // automatically when we come back to the origin page
+                            ref.authWithOAuthRedirect(provider, function(err, authData) {
+                                if (err) {
+                                    Rollbar.error(err);
+                                } else {
+                                    onAuth(authData);
+                                }
+                            });
+                        } else {
+                            Rollbar.error(error);
+                        }
+                    } if (authData) {
+                        onAuth(authData);
                     }
                 });
             }
+
             // Perform the login action when the user submits the login form
             $scope.doLogin = function (provider) {
                 redir(provider);
@@ -57,11 +74,8 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
                 //$scope.closeLogin();
                 if (authData) {
                     $scope.closeLogin();
-                    $rootScope.user = $scope.user = authData;
-                    localStorage.setItem('logged', 'true');
-                    $location.path('/events');
+                    onAuth(authData);
                 }
-
             });
 
 
@@ -88,12 +102,12 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
 
             function start() {
                 let isLogged = localStorage.getItem('logged');
-                if (isLogged) {
-                    $scope.loadingIndicator = $ionicLoading.show({
-                        scope: $scope
-                    });
-                }
-                if (!isLogged) {
+                // if (isLogged) {
+                //     $scope.loadingIndicator = $ionicLoading.show({
+                //         scope: $scope
+                //     });
+                // }
+                if (!isLogged && !$rootScope.guest) {
                     return;
                 }
 
@@ -130,6 +144,10 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
             }, 500));
 
             $rootScope.$watch('user', () => {
+                start();
+            });
+
+            $rootScope.$watch('guest', () => {
                 start();
             });
 

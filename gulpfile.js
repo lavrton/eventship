@@ -93,10 +93,10 @@ gulp.task('copy_www', ['babel','clean_build'], function () {
         }));
 });
 
-gulp.task('deploy_firebase', ['babel','copy_www', 'manifest', 'replace_index_manifest'], shell.task([
+gulp.task('deploy_firebase', ['build'], shell.task([
     'firebase deploy'
 ], {
-    cwd: './' + app_build
+    cwd: './site'
 }));
 
 gulp.task('deploy_github', ['build'], shell.task([
@@ -107,7 +107,7 @@ gulp.task('deploy_github', ['build'], shell.task([
 
 gulp.task('build', ['copy_www', 'manifest', 'replace_index_manifest']);
 
-gulp.task('deploy', ['deploy_github']);
+gulp.task('deploy', ['deploy_firebase']);
 
 gulp.task('manifest', ['copy_www'], function () {
     return gulp.src(app_build + '/**/*')
@@ -127,7 +127,7 @@ gulp.task('replace_index_manifest', ['copy_www'], function (cb) {
 
     rimraf(output, function () {
         gulp.src(input)
-            .pipe(replace('<html>', '<html manifest="app.manifest">'))
+            .pipe(replace('<html>', '<html manifest="./app.manifest">'))
             .pipe(gulp.dest(app_build))
             .on('end', cb);
     });

@@ -3,6 +3,7 @@ angular.module('mie.store', []).service('store', ['$rootScope', ($rootScope) => 
 
     function Store() {
         this._localEventsCopy = [];
+        this._onUpdates = [];
         this.lastSyncTime = new Date(localStorage.getItem('lastSync'));
     }
 
@@ -18,6 +19,7 @@ angular.module('mie.store', []).service('store', ['$rootScope', ($rootScope) => 
 
     // PUBLIC METHODS
     Store.prototype.onUpdate = function (func) {
+        this._onUpdates.push(func);
         if (!$rootScope.user) {
             return;
         }
@@ -36,6 +38,13 @@ angular.module('mie.store', []).service('store', ['$rootScope', ($rootScope) => 
 
         // disable as too slow for now
         //eventsRef.on('value', update, this);
+    };
+
+    Store.prototype._triggerUpdate = function () {
+        this._onUpdates.forEach((f) => {
+            var data = this._prepareData(this._localEventsCopy);
+            f(data);
+        });
     };
 
     Store.prototype.save = function (event) {
@@ -147,9 +156,9 @@ angular.module('mie.store', []).service('store', ['$rootScope', ($rootScope) => 
                     updated = true;
                 }
             });
-            //if (updated) {
-            //    this.
-            //}
+            if (updated) {
+               this._triggerUpdate();
+            }
         });
         //let i = 0;
         //let delay = 5;
