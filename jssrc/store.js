@@ -128,11 +128,14 @@ angular.module('mie.store', []).service('store', ['$rootScope', ($rootScope) => 
                     this._saveEventToLocal(remote);
                     updated = true;
                 }
-                if (!remote.updated || local.updated > remote.updated) {
+                if (local && (!remote.updated || local.updated > remote.updated)) {
                     this._saveEventToRemote(local);
                 }
             });
             _.each(this._localEventsCopy, (local) => {
+                if (!isValidEventObject(local)) {
+                    debugger;
+                }
                 let remote = _.find(events, (e) => {
                     return (e.id + e.type) === (local.id + local.type);
                 });

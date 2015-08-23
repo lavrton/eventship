@@ -67,7 +67,7 @@ angular.module('mie.settings', ['mie.store'])
             $scope.logout = () => {
                 let ref = new Firebase('https://incandescent-fire-1476.firebaseio.com/');
                 ref.unauth();
-                localStorage.clearItem('logged');
+                localStorage.clear();
                 location.reload();
             };
         }

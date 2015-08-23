@@ -90,4 +90,5 @@ function checkUpdates() {
     cache.addEventListener('updateready', onUpdateReady);
 }
 
+
 checkUpdates();

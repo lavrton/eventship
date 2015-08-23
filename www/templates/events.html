@@ -24,7 +24,7 @@
                 <div class="item item-divider">
 
                     <button class="button button-block" ng-class="{0:'button-bad', 1:'button-not-good', 2:'button-good', 3:'button-awesome'}[event.score]" type="submit">
-                        Submit
+                        Save
                     </button>
                 </div>
             </form>
@@ -44,8 +44,9 @@
                     </ion-radio>
                 </div>
                 <div class="item item-divider">
-                    <button class="button button-block button-positive" type="submit">
-                        Submit
+                    <button class="button button-block button-positive" type="submit" ng-disabled="!selectedEvent.id">
+                        <span ng-if='selectedEvent.id'>Save</span>
+                        <span ng-if='!selectedEvent.id'>Firstly, choose the best event.</span>
                     </button>
                 </div>
             </form>

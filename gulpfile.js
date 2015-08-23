@@ -52,7 +52,7 @@ gulp.task('sass', function (done) {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(paths.sass, ['sass']);
+    // gulp.watch(paths.sass, ['sass']);
     gulp.watch(paths.js, ['babel']);
 });
 
@@ -86,30 +86,28 @@ gulp.task('clean_build', function (cb) {
     rimraf(app_build + '/', cb);
 });
 
-gulp.task('copy_www', ['babel','sass','clean_build'], function () {
+gulp.task('copy_www', ['babel','clean_build'], function () {
     return gulp.src(wwwFiles)
         .pipe(gulpCopy(app_build, {
             prefix: 1
         }));
 });
 
-gulp.task('deploy_firebase', ['sass', 'babel','copy_www', 'manifest', 'replace_index_manifest'], shell.task([
+gulp.task('deploy_firebase', ['babel','copy_www', 'manifest', 'replace_index_manifest'], shell.task([
     'firebase deploy'
 ], {
     cwd: './' + app_build
 }));
 
 gulp.task('deploy_github', ['build'], shell.task([
-    'git add . --all',
-    'git commit -m "update ' + new Date() + '"',
-    'git push'
-]), {
-    cwd: './site'
-});
+    'cd ./site && git add . --all',
+    'cd ./site && git commit -m "app update ' + new Date() + '"',
+    'cd ./site && git push'
+]));
 
 gulp.task('build', ['copy_www', 'manifest', 'replace_index_manifest']);
 
-gulp.task('deploy', ['deploy_firebase']);
+gulp.task('deploy', ['deploy_github']);
 
 gulp.task('manifest', ['copy_www'], function () {
     return gulp.src(app_build + '/**/*')

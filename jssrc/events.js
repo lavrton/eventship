@@ -506,6 +506,9 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
 ])
     .factory('beautifyDate', function () {
         function beautifyDate(event) {
+            if (!event) {
+                return 'no event..';
+            }
             if (event.type === 'day') {
                 let date = moment(new Date(event.id)).calendar();
                 if (date.lastIndexOf('at') !== -1) {
