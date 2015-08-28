@@ -232,6 +232,9 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
                 return nestedEvents;
             },
             _updateFromData: (data) => {
+                if (data.dayEvents.length === 0) {
+                    return;
+                }
                 nestedEvents = data.nestedEvents.map((event) => {
                     let e = new NestedEvent(event);
                     return e;

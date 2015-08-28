@@ -166,8 +166,8 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
                 let placeholders = [
                     'Bad :(? ANYTHING interesting here?',
                     'Not really good? So type your event...',
-                    'Good day! What you was doing?',
-                    'AWESOME?! What you did or made?'
+                    'Good day! What was you doing?',
+                    'AWESOME? What did you do or make?'
                 ];
                 event.placeholder = placeholders[event.score];
             };
