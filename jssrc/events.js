@@ -15,7 +15,7 @@ function isFullChildren(nestedEvent) {
         let nextDay = new Date(tempDate.toString());
         nextDay.setDate(nextDay.getDate() + 1);
         let value = (lastChild.title || '').toString();
-        if (nextDay.getMonth() !== tempDate.getMonth() && (value.length > 2)) {
+        if (nextDay.getMonth() !== tempDate.getMonth() && (value.length >= 1)) {
             fullChildren = true;
         }
         fullChildren = fullChildren && !nestedEvent.children.filter(function (child) {
@@ -63,7 +63,14 @@ function isFullChildren(nestedEvent) {
 }
 
 function isNeedSubmit(nestedEvent) {
-    return !nestedEvent.selectedChildId && isFullChildren(nestedEvent);
+    if (isFullChildren(nestedEvent)) {
+        if (nestedEvent.children.length === 1) {
+            let child = nestedEvent.children[0];
+            nestedEvent.selectedChildId = child.selectedChildId || child.id;
+        }
+        return !nestedEvent.selectedChildId;
+    }
+    return false;
 }
 
 
@@ -232,16 +239,17 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
                 return nestedEvents;
             },
             _updateFromData: (data) => {
-                if (data.dayEvents.length === 0) {
-                    return;
+                if (data.nestedEvents.length !== 0) {
+                    nestedEvents = data.nestedEvents.map((event) => {
+                        let e = new NestedEvent(event);
+                        return e;
+                    });
                 }
-                nestedEvents = data.nestedEvents.map((event) => {
-                    let e = new NestedEvent(event);
-                    return e;
-                });
-                dayEvents = data.dayEvents.map((event) => {
-                    return new DayEvent(event);
-                });
+                if (data.dayEvents.length !== 0) {
+                    dayEvents = data.dayEvents.map((event) => {
+                        return new DayEvent(event);
+                    });
+                }
                 Events._buildTree();
                 Events._triggerUpdate();
             },
