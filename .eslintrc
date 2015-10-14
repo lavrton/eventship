@@ -23,7 +23,7 @@
     },
 
     "rules": {
-        "no-alert": 2,
+        "no-alert": 0,
         "no-array-constructor": 2,
         "no-bitwise": 2,
         "no-caller": 2,
@@ -32,7 +32,7 @@
         "no-underscore-dangle": 0,
         "no-cond-assign": 2,
         "no-console": 0,
-        "no-constant-condition": 2,
+        "no-constant-condition": 0,
         "no-continue": 0,
         "no-control-regex": 2,
         "no-debugger": 2,
@@ -111,7 +111,7 @@
         "no-throw-literal": 1,
         "no-undef": 2,
         "no-undef-init": 2,
-        "no-undefined": 1,
+        "no-undefined": 0,
         "no-unneeded-ternary": 2,
         "no-unreachable": 2,
         "no-unused-expressions": 2,

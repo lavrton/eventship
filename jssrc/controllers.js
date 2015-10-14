@@ -6,7 +6,7 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
     .controller('AppCtrl', ['$scope', '$location', '$ionicModal', '$rootScope', '$ionicSlideBoxDelegate',
         function ($scope, $location, $ionicModal, $rootScope, $ionicSlideBoxDelegate) {
             // Create the login modal that we will use later
-            let ref = new Firebase('https://incandescent-fire-1476.firebaseio.com/app');
+            let ref = new Firebase('https://incandescent-fire-1476.firebaseio.com/');
             $rootScope.user = $scope.user = ref.getAuth();
 
             $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -37,29 +37,27 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
 
             function onAuth(authData) {
                 if (!authData) {
-                    throw "Empty auth data";
+                    throw new Error('Empty auth data');
                 }
                 $rootScope.user = $scope.user = authData;
+
+
                 localStorage.setItem('logged', 'true');
                 $location.path('/events');
+
+                let provider = authData.provider;
+                ref.child('users')
+                    .child($rootScope.user.uid)
+                    .child('user')
+                    .set({
+                        name: authData[provider].displayName
+                    });
             }
             function redir(provider) {
-                ref.authWithOAuthPopup(provider, function(error, authData) {
-                    if (error) {
-                        if (error.code === "TRANSPORT_UNAVAILABLE") {
-                            // fall-back to browser redirects, and pick up the session
-                            // automatically when we come back to the origin page
-                            ref.authWithOAuthRedirect(provider, function(err, authData) {
-                                if (err) {
-                                    Rollbar.error(err);
-                                } else {
-                                    onAuth(authData);
-                                }
-                            });
-                        } else {
-                            Rollbar.error(error);
-                        }
-                    } if (authData) {
+                ref.authWithOAuthRedirect(provider, function(err, authData) {
+                    if (err) {
+                        window.Rollbar.error(err);
+                    } else {
                         onAuth(authData);
                     }
                 });
@@ -73,6 +71,7 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
             ref.onAuth(function (authData) {
                 //$scope.closeLogin();
                 if (authData) {
+                    console.log(authData);
                     $scope.closeLogin();
                     onAuth(authData);
                 }
@@ -102,11 +101,7 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
 
             function start() {
                 let isLogged = localStorage.getItem('logged');
-                // if (isLogged) {
-                //     $scope.loadingIndicator = $ionicLoading.show({
-                //         scope: $scope
-                //     });
-                // }
+
                 if (!isLogged && !$rootScope.guest) {
                     return;
                 }
@@ -123,18 +118,20 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
 
             $scope.beautifyDate = beautifyDate;
             $scope.selectedEvent = {};
+            $scope.event = {};
 
             function update() {
-                $scope.unsubmitType = Events.getUnsubmitType();
-                $scope.submitDone = Events.isSubmitDone();
-                $scope.event = Events.getUnsubmitNestedEvent();
-                $scope.lastEventDate = Events.getUnsubmitDate();
-                $scope.unsubmitVariants = Events.getNestedEventVariants();
-                $scope.combinedEventsList = Events.getCombinedList();
-
-                if (!$scope.submitDone && $scope.unsubmitType !== 'day' && $scope.unsubmitVariants.length === 1) {
-                    Events.submitNestedEvent($scope.event.type, $scope.unsubmitVariants[0].id);
+                $scope.event = Events.getUnsubmitEvent();
+                if (!$scope.event) {
+                    return;
                 }
+                if ($scope.event.type !== 'day') {
+                    $scope.unsubmitVariants = Events.getNestedEventValuesVariants($scope.event);
+                } else {
+                    $scope.unsubmitVariants = [];
+                }
+
+                $scope.combinedEventsList = Events.getCombinedList();
             }
             update();
 
@@ -195,12 +192,14 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
         let type = $stateParams.type;
         $scope.event = Events.getEvent(type, id);
 
+        console.log($scope.event);
+
         if (!$scope.event) {
             $location.path('/events');
             return;
         }
         if (type !== 'day') {
-            $scope.variants = Events.getNestedEventVariants(type, id);
+            $scope.variants = Events.getNestedEventValuesVariants($scope.event);
             $scope.selectedEvent = {
                 id: $scope.event.selectedChildId
             };
@@ -217,7 +216,6 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
             Events.updateNestedEvent(type, $scope.event.id, selectedDayId);
         });
 
-        //throw new Error('Test Error');
 
         $scope.$watchGroup(['event.title', 'event.score'], () => {
             if (type !== 'day') {

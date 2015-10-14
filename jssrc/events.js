@@ -185,40 +185,20 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
 })
 
 
-.factory('Events', ['utils', 'settings', 'store', 'DayEvent', 'NestedEvent', 'isOnline',
+.factory('Events', ['utils', 'settings', 'store', 'DayEvent', 'NestedEvent',
 
-    function (utils, settings, store, DayEvent, NestedEvent, isOnline) {
-        isOnline().then((status) => {
-            console.log('isOnline', status);
-        });
+    function (utils, settings, store, DayEvent, NestedEvent) {
         let startFrom = new Date();
-        //let lastEventDate = new Date(startFrom);
-        //lastEventDate.setDate(startFrom.getDate() - 1);
-        //let lastId = 0;
-
 
         let dayEvents = [];
         let nestedEvents = [];
 
-        //(JSON.parse(localStorage.getItem('nestedEvents')) || []).forEach(function (item) {
-        //    let e = new NestedEvent(item.type, item.id);
-        //    e.selectedChildId = item.selectedChildId;
-        //    nestedEvents.push(e);
-        //});
-        //
-        //// find last date
-        //dayEvents.forEach(function (event) {
-        //    event.date = new Date(event.date);
-        //    lastId = Math.max(lastId, event.id);
-        //    lastEventDate = new Date(Math.max(Number(lastEventDate), event.date));
-        //});
-        //lastEventDate.setDate(lastEventDate.getDate() + 1);
-
-        let findLoosed = function () {
+        function findLoosed() {
             let weekStart = utils.findWeekId(startFrom);
             let monthStart = utils.findMonthId(startFrom);
             let quaterStart = utils.findQuarterId(startFrom);
             let yearStart = utils.findYearId(startFrom);
+
             return nestedEvents.filter(function (e) {
                 return e.type === 'week' && isFullChildren(e) && isNeedSubmit(e) && e.id >= weekStart;
             })[0] || nestedEvents.filter(function (e) {
@@ -228,7 +208,7 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
             })[0] || nestedEvents.filter(function (e) {
                 return e.type === 'year' && isFullChildren(e) && isNeedSubmit(e) && e.id >= yearStart;
             })[0];
-        };
+        }
 
 
         let Events = {
@@ -267,6 +247,8 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
             },
             _buildTree: function () {
                 let currentDate = new Date(startFrom);
+
+
                 while (currentDate < new Date()) {
                     let day = _.find(dayEvents, (d) => {
                         return d.date.toDateString() === currentDate.toDateString();
@@ -416,7 +398,12 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
                     return e.selectedChildId || e.id;
                 });
                 if (vatiants.indexOf(selectedChildId) === -1) {
-                    throw new Error('No such variant to select');
+                    console.error('No such variant to select');
+                    window.Rollbar.error('no such child variant', {
+                        event: event
+                    });
+                    let vars = Events.getNestedEventValuesVariants(event);
+                    selectedChildId = vars[0].id;
                 }
                 event.selectedChildId = selectedChildId;
                 store.save(event);
@@ -429,6 +416,7 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
                         store.save(e);
                     });
                 }
+                nestedEvents.forEach((e) => isNeedSubmit(e));
             },
             submitDayEvent: function (title, score) {
                 let day = Events._getUnsubmitDay();
@@ -445,12 +433,26 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
                         date: e.date
                     };
                 });
-                localStorage.setItem('dayEvents', JSON.stringify(toSave));
                 this._buildTree();
             },
             submitNestedEvent: function (type, childId) {
                 let loosed = findLoosed();
                 Events.updateNestedEvent(type, loosed.id, childId);
+            },
+            getUnsubmitEvent: function() {
+                let unsubmitDay = this._getUnsubmitDay();
+                let unsubmitNested = findLoosed();
+
+
+                if (unsubmitDay && unsubmitNested && unsubmitDay.date > unsubmitNested.date) {
+                    return unsubmitNested;
+                } else if (unsubmitDay) {
+                    return unsubmitDay;
+                } else if (unsubmitNested) {
+                    return unsubmitNested;
+                }
+
+                return null;
             },
             getUnsubmitType: function () {
                 let unsubmitDay = this._getUnsubmitDay();
@@ -470,25 +472,16 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
             getUnsubmitNestedEvent: function () {
                 return findLoosed();
             },
-            getNestedEventVariants: (type, id) => {
-                let loosed;
-                if (id) {
-                    loosed = Events.getEvent(type, id);
-                } else {
-                    loosed = findLoosed();
+            getNestedEventValuesVariants: (event) => {
+                if (event.type === 'week') {
+                    return event.children;
                 }
-                if (!loosed) {
-                    return [];
-                }
-                if (loosed.type === 'week') {
-                    return loosed.children;
-                } else {
-                    return loosed.children.map(function (child) {
-                        return dayEvents.filter(function (e) {
-                            return e.id === child.selectedChildId;
-                        })[0];
-                    });
-                }
+
+                return event.children.map(function (child) {
+                    return dayEvents.filter(function (e) {
+                        return e.id === child.selectedChildId;
+                    })[0];
+                });
             },
 
             _setStartDate: function (date) {

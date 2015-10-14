@@ -134,7 +134,8 @@ describe('Events', function () {
         });
 
         it('get day veriants before submit', function () {
-            var variants = Events.getNestedEventVariants();
+            var event = Events.getUnsubmitEvent();
+            var variants = Events.getNestedEventValuesVariants(event);
             expect(variants.length).toBe(4);
             expect(variants[0].title).toBe('чт');
         });
@@ -221,7 +222,6 @@ describe('Events', function () {
             Events.submitDayEvent('сб');
             Events.submitDayEvent('вс');
             Events.submitNestedEvent('week', '2015-05-31'); // set week
-            Events.submitNestedEvent('month', '2015-05-31'); // set month
 
             Events.submitDayEvent('пн'); // set 1 june
             list = Events.getCombinedList();
@@ -244,10 +244,8 @@ describe('Events', function () {
             Events.submitDayEvent('сб');
             Events.submitDayEvent('вс');
             Events.submitNestedEvent('week', '2015-05-31'); // set week
-            Events.submitNestedEvent('month', '2015-05-31'); // set month
 
             Events.submitDayEvent('пн'); // set 1 june
-            //var list = Events.getCombinedList();
         });
 
         it('we can change title not selected day', function () {

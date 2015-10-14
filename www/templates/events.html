@@ -2,28 +2,28 @@
     <ion-content>
 
         <!-- SUBMIT DAY -->
-        <div ng-if="unsubmitType === 'day'">
-            <form ng-submit="createDayEvent(event)">
+        <div ng-if="event && event.type === 'day'">
+            <form ng-submit="createDayEvent(eventToSave)">
                 <div class="item item-divider">
-                    Add event for {{lastEventDate.toDateString()}}.
+                    Add event for {{beautifyDate(event)}}.
                 </div>
                 <div class="item">
                     <!--<label>Day score:</label>-->
-                    <div class="range" ng-class="{0:'bad-text range-bad', 1:'not-good-text range-not-good', 2:'good-text range-good', 3:'awesome-text range-awesome'}[event.score]">
+                    <div class="range" ng-class="{0:'bad-text range-bad', 1:'not-good-text range-not-good', 2:'good-text range-good', 3:'awesome-text range-awesome'}[eventToSave.score]">
                         <i class="icon ion-thumbsdown"></i>
-                        <input type="range" name="score" min="0" max="3" step="1" ng-model="event.score" ng-init="event.score = 2" ng-change="onScoreChange(event)">
+                        <input type="range" name="score" min="0" max="3" step="1" ng-model="eventToSave.score" ng-init="eventToSave.score = 2" ng-change="onScoreChange(eventToSave)">
                         <i class="icon ion-thumbsup"></i>
                     </div>
                 </div>
                 <div class="item item-text-wrap">
                     <label class="item item-input">
-                        <input type="text" placeholder="{{event.placeholder || 'Write event title'}}"  ng-model="event.title">
+                        <input type="text" placeholder="{{eventToSave.placeholder || 'Write event title'}}"  ng-model="eventToSave.title">
                     </label>
                 </div>
 
                 <div class="item item-divider">
 
-                    <button class="button button-block" ng-class="{0:'button-bad', 1:'button-not-good', 2:'button-good', 3:'button-awesome'}[event.score]" type="submit">
+                    <button class="button button-block" ng-class="{0:'button-bad', 1:'button-not-good', 2:'button-good', 3:'button-awesome'}[eventToSave.score]" type="submit">
                         Save
                     </button>
                 </div>
@@ -33,7 +33,7 @@
 
 
         <!-- SUBMIT NESTED -->
-        <div ng-if="unsubmitType !== 'day' && !submitDone">
+        <div ng-if="event && event.type !== 'day'">
             <form ng-submit="createNestedEvent(event)">
                 <div class="item item-divider">
                     Make choise for {{beautifyDate(event)}}.
