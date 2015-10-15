@@ -54,8 +54,10 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
             }
 
             function redir(provider) {
+                localStorage.setItem('provider', provider);
                 ref.authWithOAuthRedirect(provider, function(err, authData) {
                     if (err) {
+                        console.error(err);
                         window.Rollbar.error(err);
                     } else {
                         onAuth(authData);
@@ -74,7 +76,7 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
                     $ionicLoading.show();
                     setTimeout(function() {
                         if (!ref.getAuth()) {
-                            redir('facebook');
+                            redir(localStorage.getItem('provider'));
                         }
                     }, 4000);
                 }

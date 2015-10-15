@@ -64,9 +64,9 @@
 
 
         <!-- EVENTS LIST -->
-        <ion-list>
+        <ion-list ng-if="combinedEventsList.length">
             <div class="item item-divider">
-                Last events:
+                Last events: 
             </div>
 
             <ion-item ng-repeat="event in combinedEventsList track by event.id + event.type" href="#/app/events/{{event.type}}/{{event.id}}" ng-value="variant.id" ng-class="{0:'bad', 1:'not-good', 2:'good', 3:'awesome'}[event.score]">

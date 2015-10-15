@@ -8,11 +8,23 @@
     </ion-header-bar>
     <ion-content>
 
-        <button class="button button-full button-positive" ng-click="doLogin('facebook')" ng-hide="user">       Login with Facebook
+        <button class="button button-full button-positive" ng-click="doLogin('facebook')" ng-hide="user">
+            via Facebook
         </button>
-            <button class="button button-full" ng-click="enterAsGuest()" ng-hide="user">
-                Enter as a guest</br>
-            </button>
 
+        <button class="button button-full" style="background-color: #F44336; color: white; border-color: #B71C1C"ng-click="doLogin('google')" ng-hide="user">
+            via Google
+        </button>
+
+        <button class="button button-full" ng-click="enterAsGuest()" ng-hide="user">
+            Enter as a guest
+        </button>
+
+        <div class="row">
+          <div class="col">
+              All data will be stored only localy if you enter as guest.
+              To avoid data lost, please, use any social login.
+          </div>
+        </div>
     </ion-content>
 </ion-modal-view>
