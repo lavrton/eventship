@@ -39,7 +39,7 @@
                     Make choise for {{beautifyDate(event)}}.
                 </div>
                 <div class="item item-text-wrap">
-                    <ion-radio ng-repeat="variant in unsubmitVariants" ng-model="selectedEvent.id" ng-value="variant.id">
+                    <ion-radio ng-repeat="variant in unsubmitVariants" ng-class="{0:'bad', 1:'not-good', 2:'good', 3:'awesome'}[variant.score]" ng-model="selectedEvent.id" ng-value="variant.id">
                         {{variant.title}}
                     </ion-radio>
                 </div>

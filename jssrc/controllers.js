@@ -96,7 +96,6 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
             ref.onAuth(function (authData) {
                 //$scope.closeLogin();
                 if (authData) {
-                    console.log(authData);
                     $scope.closeLogin();
                     onAuth(authData);
                 }
@@ -106,14 +105,21 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
             $ionicModal.fromTemplateUrl('templates/tour.html', {
                 scope: $scope
             }).then(function (tour) {
+                $rootScope.tourModal = tour;
                 $scope.tour = tour;
-                //tour.show();
+                if (!localStorage.getItem('tourShowed')) {
+                    tour.show();
+                }
             });
 
             // Triggered in the login modal to close it
             $scope.closeTour = function () {
                 if ($scope.tour) {
                     $scope.tour.hide();
+                    localStorage.setItem('tourShowed', 'true');
+                    if (!$rootScope.user && !$rootScope.guest) {
+                        $scope.login();
+                    }
                 }
             };
         }
