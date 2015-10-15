@@ -33,6 +33,20 @@ angular.module('mie.settings', ['mie.store'])
     }])
     .controller('SettingsCtrl', ['$scope', 'settings', 'Events',
         function ($scope, settings, Events) {
+
+            $scope.timePickerObject = {
+              inputEpochTime: ((new Date()).getHours() * 60 * 60),  //Optional
+              step: 15,  //Optional
+              format: 12,  //Optional
+              titleLabel: '12-hour Format',  //Optional
+              setLabel: 'Set',  //Optional
+              closeLabel: 'Close',  //Optional
+              setButtonType: 'button-positive',  //Optional
+              closeButtonType: 'button-stable',  //Optional
+              callback: function (val) {    //Mandatory
+              }
+            };
+
             $scope.settings = {
                 notificationTime: 0,
                 startDate: new Date(),

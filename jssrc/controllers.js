@@ -3,8 +3,8 @@
 // SOME NEW EXTRA TIPS AND TOUR
 
 angular.module('mie.controllers', ['mie.events', 'mie.settings'])
-    .controller('AppCtrl', ['$scope', '$location', '$ionicModal', '$rootScope', '$ionicSlideBoxDelegate',
-        function ($scope, $location, $ionicModal, $rootScope, $ionicSlideBoxDelegate) {
+    .controller('AppCtrl', ['$scope', '$location', '$ionicModal', '$rootScope', '$ionicSlideBoxDelegate', '$ionicLoading',
+        function ($scope, $location, $ionicModal, $rootScope, $ionicSlideBoxDelegate, $ionicLoading) {
             // Create the login modal that we will use later
             let ref = new Firebase('https://incandescent-fire-1476.firebaseio.com/');
             $rootScope.user = $scope.user = ref.getAuth();
@@ -27,7 +27,6 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
                 if ($scope.modal) {
                     $scope.modal.hide();
                 }
-                $rootScope.guest = true;
             };
 
             // Open the login modal
@@ -44,7 +43,7 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
 
                 localStorage.setItem('logged', 'true');
                 $location.path('/events');
-
+                $ionicLoading.hide();
                 let provider = authData.provider;
                 ref.child('users')
                     .child($rootScope.user.uid)
@@ -53,6 +52,7 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
                         name: authData[provider].displayName
                     });
             }
+
             function redir(provider) {
                 ref.authWithOAuthRedirect(provider, function(err, authData) {
                     if (err) {
@@ -63,9 +63,32 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
                 });
             }
 
+            // this is FUCKING hack around firebase bug
+            // when on auth callback is not firing after first success authWithOAuthRedirect()
+            // my current version of firebase is 2.3.1
+            // may be you are from future and bug is fixed?
+
+            // So nice code, right?
+            setTimeout(function() {
+                if (location.hash.indexOf('firebase') >= 0 && !ref.getAuth()) {
+                    $ionicLoading.show();
+                    setTimeout(function() {
+                        if (!ref.getAuth()) {
+                            redir('facebook');
+                        }
+                    }, 4000);
+                }
+            }, 2000);
+
             // Perform the login action when the user submits the login form
             $scope.doLogin = function (provider) {
                 redir(provider);
+            };
+            // redir('facebook');
+
+            $scope.enterAsGuest = function() {
+                $scope.closeLogin();
+                $rootScope.guest = true;
             };
 
             ref.onAuth(function (authData) {
@@ -99,16 +122,20 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
     .controller('EventsCtrl', ['$scope', 'Events', 'beautifyDate', '$ionicLoading', '$rootScope',
         function ($scope, Events, beautifyDate, $ionicLoading, $rootScope) {
 
+            let started = false;
             function start() {
+                console.error($rootScope.user, $rootScope.guest);
                 let isLogged = localStorage.getItem('logged');
 
                 if (!isLogged && !$rootScope.guest) {
                     return;
                 }
+                $ionicLoading.show();
 
+                started = true;
                 Events.load(() => {
-                    update();
                     $ionicLoading.hide();
+                    update();
                     $scope.$apply();
                 });
             }
@@ -141,11 +168,15 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
             }, 500));
 
             $rootScope.$watch('user', () => {
-                start();
+                if ($rootScope.user && !started) {
+                    start();
+                }
             });
 
             $rootScope.$watch('guest', () => {
-                start();
+                if ($rootScope.guest && !started) {
+                    start();
+                }
             });
 
 

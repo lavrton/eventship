@@ -70,10 +70,7 @@ var wwwFiles = ['www/css/*', 'www/img/*', 'www/icons/*', 'www/js/*', 'www/*', 'w
     'www/lib/ionic/fonts/ionicons.woff',
     'www/lib/ionic/fonts/ionicons.ttf',
 
-    'www/lib/ionic-timepicker/dist/style.css',
-    'www/lib/ionic-timepicker/dist/templates.js',
-    'www/lib/ionic-timepicker/dist/ionic-timepicker.js',
-
+    'www/lib/ionic-timepicker/dist/ionic-timepicker.bundle.min.js',
 
     'www/lib/moment/min/moment.min.js',
     'www/lib/lodash/lodash.min.js',

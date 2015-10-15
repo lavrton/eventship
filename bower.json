@@ -2,14 +2,15 @@
   "name": "Eventship",
   "private": "true",
   "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.0.0",
-    "ionic-timepicker": "~0.1.2",
     "angular-mocks": "~1.4.0",
     "jasmine": "~2.3.4"
   },
   "dependencies": {
+    "ionic": "driftyco/ionic-bower#v1.0.0",
+    "ionic-timepicker": "~0.4.0",
     "moment": "~2.10.3",
-    "lodash": "~3.9.3",
-    "firebase": "~2.2.7"
+    "lodash": "~3.10.1",
+    "firebase": "~2.3.1",
+    "angular": "~1.4.7"
   }
 }

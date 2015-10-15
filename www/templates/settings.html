@@ -1,15 +1,16 @@
 <ion-view view-title="Settings">
     <ion-content>
         <div class="card">
-            <div class="item item-text-wrap">Version 0.5.4</div>
+            <div class="item item-text-wrap">Version 0.5.6</div>
         </div>
         <label class="item item-input item-stacked-label">
             <span class="input-label">Notification time</span>
-            <ionic-timepicker etime="settings.notificationTime" format="settings.format" step="10">
-                <button class="button button-block button-positive" ng-disabled="!isApp">
-                    <standard-time-meridian ng-if="isApp" etime='settings.notificationTime'></standard-time-meridian>
-                    <span ng-if="!isApp">Disabled for web version</span>
-                </button>
+        
+            <ionic-timepicker input-obj="timePickerObject">
+                <button class="button button-block button-positive overflowShow" ng-disabled="!isApp">
+                <standard-time-meridian etime='timePickerObject.inputEpochTime'></standard-time-meridian>
+                <span ng-if="!isApp">Disabled for web version</span>
+              </button>
             </ionic-timepicker>
         </label>
         <!-- <label class="item item-input">

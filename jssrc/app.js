@@ -15,6 +15,9 @@ angular.module('mie', ['ionic', 'mie.controllers', 'ionic-timepicker'])
                 // org.apache.cordova.statusbar required
                 window.StatusBar.styleDefault();
             }
+
+            let loading = document.getElementById('loading');
+            document.body.removeChild(loading);
         });
     })
 
