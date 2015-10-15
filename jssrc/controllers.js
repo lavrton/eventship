@@ -157,6 +157,7 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
             $scope.event = {};
 
             function update() {
+                $scope.combinedEventsList = Events.getCombinedList();
                 $scope.event = Events.getUnsubmitEvent();
                 if (!$scope.event) {
                     return;
@@ -166,8 +167,6 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
                 } else {
                     $scope.unsubmitVariants = [];
                 }
-
-                $scope.combinedEventsList = Events.getCombinedList();
             }
             update();
 
