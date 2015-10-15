@@ -16,7 +16,11 @@
         </label> -->
 
         <div class="card">
-            <div class="item item-text-wrap">Logged as: {{$root.user.facebook.displayName}}</div>
+            <div class="item item-text-wrap">Logged as:
+                <span ng-if="$root.user.facebook">{{$root.user.facebook.displayName}}</span>
+                <span ng-if="$root.user.google">{{$root.user.google.displayName}}</span>
+                <span ng-if="$root.guest">Guest</span>
+            </div>
         </div>
 
         <button class="button button-full button-outline button-assertive" ng-click="logout()">Logout

@@ -63,6 +63,7 @@ angular.module('mie.controllers', ['mie.events', 'mie.settings'])
                         onAuth(authData);
                     }
                 });
+                
             }
 
             // this is FUCKING hack around firebase bug
