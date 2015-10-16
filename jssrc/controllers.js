@@ -2,12 +2,13 @@
 // LOGIN CHECK
 // SOME NEW EXTRA TIPS AND TOUR
 
-angular.module('mie.controllers', ['mie.events', 'mie.settings'])
-    .controller('AppCtrl', ['$scope', '$location', '$ionicModal', '$rootScope', '$ionicSlideBoxDelegate', '$ionicLoading',
-        function ($scope, $location, $ionicModal, $rootScope, $ionicSlideBoxDelegate, $ionicLoading) {
+angular.module('mie.controllers', ['mie.events', 'mie.settings', 'mie.l10n'])
+    .controller('AppCtrl', ['$scope', '$location', '$ionicModal', '$rootScope', '$ionicSlideBoxDelegate', '$ionicLoading', 'l10n',
+        function ($scope, $location, $ionicModal, $rootScope, $ionicSlideBoxDelegate, $ionicLoading, l10n) {
             // Create the login modal that we will use later
             let ref = new Firebase('https://incandescent-fire-1476.firebaseio.com/');
             $rootScope.user = $scope.user = ref.getAuth();
+            $rootScope.t = l10n;
 
             $ionicModal.fromTemplateUrl('templates/login.html', {
                 scope: $scope

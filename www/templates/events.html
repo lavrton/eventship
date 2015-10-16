@@ -1,11 +1,11 @@
-<ion-view view-title="My events">
+<ion-view view-title="{{$root.t('events.title')}}">
     <ion-content>
 
         <!-- SUBMIT DAY -->
         <div ng-if="event && event.type === 'day'">
             <form ng-submit="createDayEvent(eventToSave)">
                 <div class="item item-divider">
-                    Add event for {{beautifyDate(event)}}.
+                    {{$root.t('events.add')}} {{beautifyDate(event)}}.
                 </div>
                 <div class="item">
                     <!--<label>Day score:</label>-->
@@ -17,14 +17,14 @@
                 </div>
                 <div class="item item-text-wrap">
                     <label class="item item-input">
-                        <input type="text" placeholder="{{eventToSave.placeholder || 'Write event title'}}"  ng-model="eventToSave.title">
+                        <input type="text" placeholder="{{eventToSave.placeholder || $root.t('events.placeholder')}}"  ng-model="eventToSave.title">
                     </label>
                 </div>
 
                 <div class="item item-divider">
 
                     <button class="button button-block" ng-class="{0:'button-bad', 1:'button-not-good', 2:'button-good', 3:'button-awesome'}[eventToSave.score]" type="submit">
-                        Save
+                        {{$root.t('events.save')}}
                     </button>
                 </div>
             </form>
@@ -36,7 +36,7 @@
         <div ng-if="event && event.type !== 'day'">
             <form ng-submit="createNestedEvent(event)">
                 <div class="item item-divider">
-                    Make choise for {{beautifyDate(event)}}.
+                    {{$root.t('events.makeChoise')}} {{beautifyDate(event)}}.
                 </div>
                 <div class="item item-text-wrap">
                     <ion-radio ng-repeat="variant in unsubmitVariants" ng-class="{0:'bad', 1:'not-good', 2:'good', 3:'awesome'}[variant.score]" ng-model="selectedEvent.id" ng-value="variant.id">
@@ -45,8 +45,8 @@
                 </div>
                 <div class="item item-divider">
                     <button class="button button-block button-positive" type="submit" ng-disabled="!selectedEvent.id">
-                        <span ng-if='selectedEvent.id'>Save</span>
-                        <span ng-if='!selectedEvent.id'>Firstly, choose the best event.</span>
+                        <span ng-if='selectedEvent.id'>{{$root.t('events.save')}}</span>
+                        <span ng-if='!selectedEvent.id'>{{$root.t('events.choiseFirst')}}.</span>
                     </button>
                 </div>
             </form>
@@ -57,7 +57,7 @@
         <!-- ON SUBMIT DONE -->
         <div class="card" ng-if="!event">
             <div class="item item-text-wrap">
-                Done! What will be your important event for tomorrow?
+                {{$root.t('events.done')}}
             </div>
         </div>
         <!-- ON SUBMIT DONE -->
@@ -66,7 +66,7 @@
         <!-- EVENTS LIST -->
         <ion-list ng-if="combinedEventsList.length">
             <div class="item item-divider">
-                Last events: 
+                {{$root.t('events.last')}}: 
             </div>
 
             <ion-item ng-repeat="event in combinedEventsList track by event.id + event.type" href="#/app/events/{{event.type}}/{{event.id}}" ng-value="variant.id" ng-class="{0:'bad', 1:'not-good', 2:'good', 3:'awesome'}[event.score]">

@@ -1,8 +1,8 @@
-<ion-view view-title="Event">
+<ion-view view-title="{{$root.t('event.title')}}">
   <ion-content>
         <form ng-submit="updateDayEvent(event)" ng-if="event.type === 'day'">
           <div class="item item-divider">
-            Your event for {{beautifyDate(event)}}.
+            {{$root.t('event.yourEventFor')}} {{beautifyDate(event)}}.
           </div>
           <div class="item item-text-wrap">
             <label class="item item-input">
@@ -10,7 +10,7 @@
               </label>
           </div>
           <div class="item">
-            <label>Day score:</label>
+            <label>{{$root.t('event.dayScore')}}:</label>
             <div class="range range-positive"  ng-class="{0:'bad-text', 1:'not-good-text', 2:'good-text', 3:'awesome-text'}[event.score]">
               <i class="icon ion-thumbsdown"></i>
               <input type="range" name="score" min="0" max="3" step="1" ng-model="event.score">
@@ -27,7 +27,7 @@
 
       <form ng-submit="updateNestedEvent(event)" ng-if="event.type !== 'day'">
         <div class="item item-divider">
-          Your choise for {{beautifyDate(event)}}.
+          {{$root.t('event.yourChoiseFor')}} {{beautifyDate(event)}}.
         </div>
         <div class="item item-text-wrap">
           <ion-radio ng-repeat="variant in variants" ng-model="selectedEvent.id" ng-value="variant.id" ng-class="{0:'bad', 1:'not-good', 2:'good', 3:'awesome'}[variant.score]">
@@ -44,7 +44,7 @@
 
     <ion-list ng-if="event.type !== 'day'">
       <div class="item item-divider">
-        Nested Events:
+        {{$root.t('event.nested')}}:
       </div>
 
       <ion-item ng-repeat="evt in event.children track by evt.id + evt.type" href="#/app/events/{{evt.type}}/{{evt.id}}" ng-value="evt.id" ng-class="{0:'bad', 1:'not-good', 2:'good', 3:'awesome'}[evt.score]">

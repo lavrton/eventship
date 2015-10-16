@@ -1,6 +1,6 @@
 <ion-modal-view>
     <ion-header-bar>
-        <h1 class="title">Login</h1>
+        <h1 class="title">{{$root.t('login.title')}}</h1>
 
         <div class="buttons">
             <!--<button class="button button-clear" ng-click="closeLogin()">Close</button>-->
@@ -9,21 +9,20 @@
     <ion-content>
 
         <button class="button button-full button-positive" ng-click="doLogin('facebook')" ng-hide="user">
-            via Facebook
+            {{$root.t('login.via')}} Facebook
         </button>
 
         <button class="button button-full" style="background-color: #F44336; color: white; border-color: #B71C1C"ng-click="doLogin('google')" ng-hide="user">
-            via Google
+            {{$root.t('login.via')}} Google
         </button>
 
         <button class="button button-full" ng-click="enterAsGuest()" ng-hide="user">
-            Enter as a guest
+            {{$root.t('login.asGuest')}}
         </button>
 
         <div class="row">
           <div class="col">
-              All data will be stored only localy if you enter as guest.
-              To avoid data lost, please, use any social login.
+              {{$root.t('login.warn')}}
           </div>
         </div>
     </ion-content>
