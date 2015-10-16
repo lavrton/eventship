@@ -22,7 +22,7 @@ angular.module('mie.settings', ['mie.store'])
                         let isDateWrong = !d || isNaN(new Date(d).getYear()) || new Date(d).getFullYear() < 2012;
                         if (isDateWrong) {
                             d = new Date();
-                            d.setDate(d.getDate() - 6);
+                            d.setDate(d.getDate() - 10);
                         }
                         return d;
                     });

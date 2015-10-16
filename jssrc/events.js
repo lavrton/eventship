@@ -510,26 +510,36 @@ angular.module('mie.events', ['mie.utils', 'mie.settings', 'mie.store'])
 ])
     .factory('beautifyDate', function () {
         function beautifyDate(event) {
+            let lang = navigator.language || navigator.userLanguage || 'ru-RU';
+
+            let week = 'Week ';
+
+            if (lang.indexOf('ru') >= 0) {
+                week = 'Неделя ';
+            }
+
             if (!event) {
                 return 'no event..';
             }
             if (event.type === 'day') {
-                let date = moment(new Date(event.id)).calendar();
+                let date = moment(new Date(event.id)).locale(lang).calendar();
                 if (date.lastIndexOf('at') !== -1) {
                     date = date.slice(0, date.lastIndexOf('at') - 1);
                 }
-                return date;
+                if (date.lastIndexOf('в') !== -1) {
+                    date = date.slice(0, date.lastIndexOf('в') - 1);
+                }
+                return date.toLowerCase();
             } else if (event.type === 'month') {
-                return moment(new Date(event.id)).format('MMMM');
+                return moment(new Date(event.id)).locale(lang).format('MMMM');
             } else if (event.type === 'week') {
-                return 'Week ' + event.id;
+                return week + event.id;
             } else if (event.type === 'quarter') {
                 return 'Quarter ' + event.id;
             } else if (event.type === 'year') {
                 return 'Year ' + event.id;
-            } else {
-                return event.id;
             }
+            return event.id;
         }
 
         return beautifyDate;

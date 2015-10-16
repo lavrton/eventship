@@ -72,7 +72,7 @@ var wwwFiles = ['www/css/*', 'www/img/*', 'www/icons/*', 'www/js/*', 'www/*', 'w
 
     'www/lib/ionic-timepicker/dist/ionic-timepicker.bundle.min.js',
 
-    'www/lib/moment/min/moment.min.js',
+    'www/lib/moment/min/moment-with-locales.min.js',
     'www/lib/lodash/lodash.min.js',
     'www/lib/firebase/firebase.js'
 ];
