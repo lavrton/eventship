@@ -19,16 +19,16 @@
     <ion-content>
       <ion-list>
         <ion-item menu-close href="#/app/events">
-          <i class="icon ion-calendar"></i> Events
+          <i class="icon ion-calendar"></i> {{$root.t('menu.events')}}
         </ion-item>
         <ion-item menu-close href="#/app/settings">
-          <i class="icon ion-gear-a"></i> Settings
+          <i class="icon ion-gear-a"></i> {{$root.t('menu.settings')}}
         </ion-item>
         <ion-item menu-close href="#/app/about">
-          <i class="icon ion-information-circled"></i> About
+          <i class="icon ion-information-circled"></i> {{$root.t('menu.about')}}
         </ion-item>
         <ion-item menu-close ng-click="$root.tourModal.show()">
-          <i class="icon ion-help"></i> Show Tour
+          <i class="icon ion-help"></i> {{$root.t('menu.tour')}}
         </ion-item>
       </ion-list>
     </ion-content>

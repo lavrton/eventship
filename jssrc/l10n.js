@@ -1,7 +1,7 @@
 angular.module('mie.l10n', [])
     .factory('l10n', () => {
-        // let lang = navigator.language || navigator.userLanguage || 'ru';'
-        let lang = 'ru';
+        let lang = navigator.language || navigator.userLanguage || 'ru';'
+        // let lang = 'ru';
         lang = lang.split('-')[0];
 
         let words = {
@@ -37,9 +37,17 @@ angular.module('mie.l10n', [])
                     warn: 'All data will be stored only localy if you enter as guest. To avoid data lost, please, use any social login.'
                 },
                 tour: {
+                    title: 'Welcome',
+                    close: 'Close',
                     step1: 'Every night before you are going to sleep, think about your day for a moment and write down one thing, which was the most important event of this day.',
                     step2: 'By the end of the week, you have to select the event that was the most important one.<br/>At the end of the month you should select the most important event of the month, then a quarter, a year...',
                     step3: 'Relax and analyze events, strive to do more.<br/><br/>How do you think what will be the most important event of the next month?<br/><br/>Start using app right now and try to use it in a long term.<br/><br/>Have fun!'
+                },
+                menu: {
+                    events: 'Events',
+                    settings: 'Settings',
+                    about: 'About',
+                    tour: 'Show tour'
                 }
             },
             ru: {
@@ -71,7 +79,22 @@ angular.module('mie.l10n', [])
                     title: 'Вход',
                     via: ' ',
                     asGuest: 'Войти как гость',
-                    warn: 'Если ты войдешь как гость, все данные будут храниться только локально. Чтобы избежать случайной потери данных лучше использовать вход через социальную сеть.'
+                    warn: 'Если ты войдешь как гость, все данные будут храниться только локально. Чтобы избежать случайной потери данных лучше использовать вход через социальную сеть.',
+                    go: 'Go!'
+                },
+                tour: {
+                    title: 'Добро пожаловать',
+                    close: 'Закрыть',
+                    step1: 'Когда твой день подходит к концу, подумай о том, как он у тебя прошёл. И запиши одно самое важное событие, которое произошло с тобой в этот день.',
+                    step2: 'В конце недели тебе нужно будет выбрать самое важное событие недели.<br/>В конце месяца тебе нужно выбрать самое важное событие месяца, далее квартала и года...',
+                    step3: 'Взгляни на прошедшие события и попробуй проанализировать их.<br/><br/>Как ты думаешь какое самое важное событие у тебя будет в следующем месяце?<br/><br/>Начни использовать приложение прямо сейчас и попробуй использовать его в течении продолжительного времени.<br/><br/>Удачи!',
+                    go: 'Запустить!'
+                },
+                menu: {
+                    events: 'События',
+                    settings: 'Настройки',
+                    about: 'О приложении',
+                    tour: 'Показать тур'
                 }
             }
         };
