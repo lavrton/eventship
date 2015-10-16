@@ -1,6 +1,6 @@
 angular.module('mie.l10n', [])
     .factory('l10n', () => {
-        let lang = navigator.language || navigator.userLanguage || 'ru';'
+        let lang = navigator.language || navigator.userLanguage || 'ru';
         // let lang = 'ru';
         lang = lang.split('-')[0];
 
@@ -31,7 +31,7 @@ angular.module('mie.l10n', [])
                     last: 'Last events'
                 },
                 login: {
-                    tile: 'Login',
+                    title: 'Login',
                     via: 'via',
                     asGuest: 'Enter as a guest',
                     warn: 'All data will be stored only localy if you enter as guest. To avoid data lost, please, use any social login.'
