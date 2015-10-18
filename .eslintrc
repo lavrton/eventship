@@ -13,7 +13,7 @@
       "objectLiteralShorthandProperties": 2,
       "superInFunctions": 2,
       "templateStrings": 2,
-
+      "spread": true,
     },
     "parser": "espree",
     "env": {
@@ -153,7 +153,7 @@
         "lines-around-comment": 0,
         "max-depth": [2, 4],
         "max-len": [2, 120, 4],
-        "max-nested-callbacks": [2, 2],
+        "max-nested-callbacks": [2, 4],
         "max-params": [2, 6],
         "max-statements": [2, 10],
         "new-cap": 2,
