@@ -206,7 +206,7 @@ describe('get short list', () => {
         store.dispatch(updateEvent('week-2015-01-05', {selectedChildId: 'day-2015-01-07'}));
 
         let list = createShortList(store.getState());
-        expect(list.lenght).toBe(2);
+        expect(list.length).toBe(2);
         // at first place we should see last submited week
         expect(list[0].id).toBe('week-2015-01-05');
     });

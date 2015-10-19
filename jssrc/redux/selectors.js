@@ -201,7 +201,6 @@ export function createShortList(state) {
     });
 
     function addNested(e) {
-
         if (e.selectedChildId) {
             list.unshift(e);
             return;

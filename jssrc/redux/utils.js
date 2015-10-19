@@ -33,8 +33,8 @@ export function findMonthId(date) {
 }
 
 export function findQuarterId(date) {
-    let number = (Math.floor(date.month() / 3) + 1);
-    return `quarter-${date.year()}-${number}`;
+    // let number = (Math.floor(date.month() / 3) + 1);
+    return `quarter-${date.year()}-${date.quarter()}`;
 }
 
 export function findYearId(date) {
