@@ -1,8 +1,9 @@
 interface BestEvent {
     id: string;
     updated?: number;
-    title?: string;
-    selectedDayId?: string;
+    title?: string;  // for day
+    score?: number;  // for day
+    selectedDayId?: string;  // for nested event
 }
 
 interface State {

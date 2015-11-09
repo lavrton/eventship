@@ -267,3 +267,15 @@ export function createShortList(state: State) {
     return list;
 }
 
+
+export function findScore(state: State, id: string) : number {
+    if (idToType(id) === 'day') {
+        const event = findEvent(state, id);
+        return event.score;
+    } else {
+        const children = getChildren(state.events, id);
+        let sum = _(children).map((e: BestEvent) => findScore(state, e.id)).sum();
+        return Math.round(sum / children.length);
+    }
+}
+

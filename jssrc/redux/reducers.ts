@@ -10,6 +10,9 @@ import * as utils from './utils';
 
 export function events(state : BestEvent[] = [], action: any) {
     if (action.type === actions.ADD_EVENT) {
+        if (idToType(action.event.id) === 'day' && action.event.score === undefined) {
+            action.event.score = 2;
+        }
         return [...state, action.event];
     }
 

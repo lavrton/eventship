@@ -8,7 +8,8 @@ import {
     findEvent,
     findNestedTitle,
     findUnsubmit, findSubmitVars,
-    createShortList
+    createShortList,
+    findScore
 } from '../jssrc/redux/selectors';
 
 import {
@@ -56,14 +57,16 @@ describe('events', () => {
 
         store.dispatch(addEvent({
             title: 'day 1',
-            id: 'day-2015-01-01'
+            id: 'day-2015-01-01',
+            score: 2
         }));
 
         let day = findEvent(store.getState(), 'day-2015-01-01');
 
         expect(day).toEqual({
             title: 'day 1',
-            id: 'day-2015-01-01'
+            id: 'day-2015-01-01',
+            score: 2
         });
     });
 
@@ -237,4 +240,44 @@ describe('check updates', () => {
     });
 });
 
+
+describe('score :: ', () => {
+    let store: Redux.Store;
+
+    beforeEach(() => {
+        store = configureStore();
+        store.dispatch(setStartDate(new Date('2015-01-01')));
+        store.dispatch(build());
+    });
+
+    it('day must have score', () => {
+        store.dispatch(updateEvent('day-2015-01-01', { title: 'day 1' }));
+        const day = findEvent(store.getState(), 'day-2015-01-01');
+        expect(day.score).toBeDefined();
+    });
+
+    it('we can update score of a day', () => {
+        store.dispatch(updateEvent('day-2015-01-01', { title: 'day 1', score: 3 }));
+        const day = findEvent(store.getState(), 'day-2015-01-01');
+        expect(day.score).toBe(3);
+    });
+
+    it('nested event has calculated score', function() {
+        store.dispatch(updateEvent('day-2015-01-01', { title: 'day 1', score: 0 }));
+        store.dispatch(updateEvent('day-2015-01-02', { title: 'day 2', score: 1 }));
+        store.dispatch(updateEvent('day-2015-01-03', { title: 'day 3', score: 2 }));
+        store.dispatch(updateEvent('day-2015-01-04', { title: 'day 4', score: 3 }));
+
+        let weekScore = findScore(store.getState(), 'week-2015-01-01');
+        expect(weekScore).toBe(2);
+
+        store.dispatch(updateEvent('day-2015-01-01', { title: 'day 1', score: 3 }));
+        store.dispatch(updateEvent('day-2015-01-02', { title: 'day 2', score: 3 }));
+        weekScore = findScore(store.getState(), 'week-2015-01-01');
+        expect(weekScore).toBe(3);
+    });
+
+});
+
 // TODO check auto selected child for week
+// TODO massive validations
