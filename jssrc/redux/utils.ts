@@ -1,14 +1,14 @@
 // import moment from 'moment';
 
-let cache = {};
+let cache : { [index: string]: string } = { };
 
 
-export function findWeekId(dayDate) {
+export function findWeekId(dayDate: moment.Moment) : string {
     let cached = cache[dayDate.format('YYYY-MM-DD')];
     if (cached) {
         return cached;
     }
-    let date;
+    let date: moment.Moment;
     if (dayDate.day() === 1) {
         date = dayDate.clone();
     } else {
@@ -28,15 +28,15 @@ export function findWeekId(dayDate) {
     return result;
 }
 
-export function findMonthId(date) {
+export function findMonthId(date: moment.Moment) {
     return `month-${date.format('YYYY-MM')}`;
 }
 
-export function findQuarterId(date) {
+export function findQuarterId(date: moment.Moment) {
     // let number = (Math.floor(date.month() / 3) + 1);
     return `quarter-${date.year()}-${date.quarter()}`;
 }
 
-export function findYearId(date) {
+export function findYearId(date: moment.Moment) {
     return `year-${date.year()}`;
 }

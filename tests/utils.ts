@@ -1,7 +1,7 @@
-import { addEvent } from '../jssrc/redux/actions.js';
+import { addEvent } from '../jssrc/redux/actions';
 
 
-export function fillWeek(store) {
+export function fillWeek(store: Redux.Store) {
     store.dispatch(addEvent({
         title: 'day 1',
         id: 'day-2015-01-01'

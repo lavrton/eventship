@@ -1,13 +1,16 @@
 module.exports = {
     entry: {
-        tests: './tests/redux.spec.js'
+        tests: './tests/redux.spec.ts'
+    },
+    resolve: {
+        extensions: ['', '.js', '.ts']
     },
     output: {
         path: __dirname + '/tests/',
-        publicPath: 'tests',
+        publicPath: '/tests',
         filename: '[name].bundle.js'
     },
-    devtool: 'source-map',
+    devtool: 'inline-source-map',
     devServer: {
         // noInfo: true, //  --no-info option
         // hot: true
@@ -17,7 +20,8 @@ module.exports = {
         loaders: [
             {
                 exclude: /(node_modules|bower_components)/,
-                loader: 'babel'
+                test: /\.ts$/,
+                loader: 'ts-loader'
             }
         ]
     }
